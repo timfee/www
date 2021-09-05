@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Dossier';
+  font-weight: 700;
+  src: url('./DossierHeavy/font.woff2') format('woff2'),
+    url('./DossierHeavy/font.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Dossier';
+  font-weight: 400;
+  src: url('./DossierRegular/font.woff2') format('woff2'),
+    url('./DossierRegular/font.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Dossier';
+  src: url('./DossierItalic/font.woff2') format('woff2'),
+    url('./DossierItalic/font.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Dossier';
+  src: url('./DossierHeavyItalic/font.woff2') format('woff2'),
+    url('./DossierHeavyItalic/font.woff') format('woff');
+  font-weight: 700;
+  font-style: italic;
+}
