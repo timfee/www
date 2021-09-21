@@ -1,27 +1,16 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, { Head, Html, Main, NextScript } from 'next/document'
+
+import { getCssText } from '../stitches.config'
 
 class MyDocument extends Document {
   render() {
-    const jsonLd = {
-      '@context': 'http://schema.org/',
-      '@type': 'Person',
-      name: 'Tim Feeley',
-      image: 'https://timfeeley.com/timfeeley.png',
-      url: 'https://timfeeley.com/',
-      jobTitle: 'Product Manager',
-      worksFor: {
-        '@type': 'Organization',
-        name: 'Okta'
-      },
-      sameAs: [
-        'https://linkedin.com/in/timfeeley',
-        'https://twitter.com/timfee'
-      ]
-    }
-
     return (
       <Html lang="en">
         <Head>
+          <style
+            id="stitches"
+            dangerouslySetInnerHTML={{ __html: getCssText() }}
+          />
           <meta charSet="utf-8" />
           <link
             rel="apple-touch-icon"
@@ -73,11 +62,26 @@ class MyDocument extends Document {
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
-              __html: JSON.stringify(jsonLd)
+              __html: JSON.stringify({
+                '@context': 'http://schema.org/',
+                '@type': 'Person',
+                name: 'Tim Feeley',
+                image: 'https://timfeeley.com/timfeeley.png',
+                url: 'https://timfeeley.com/',
+                jobTitle: 'Product Manager',
+                worksFor: {
+                  '@type': 'Organization',
+                  name: 'Okta'
+                },
+                sameAs: [
+                  'https://linkedin.com/in/timfeeley',
+                  'https://twitter.com/timfee'
+                ]
+              })
             }}
           />
         </Head>
-        <body className="antialiased bg-blue-50 h-screen">
+        <body>
           <Main />
           <NextScript />
         </body>
