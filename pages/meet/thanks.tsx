@@ -1,26 +1,42 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import Head from 'next/head'
+
+import { Box } from '@/components/Box'
+import { Heading } from '@/components/Heading'
+import { Image } from '@/components/Image'
+import { Paragraph } from '@/components/Paragraph'
 
 const Meet = () => {
   return (
-    <main
-      className="flex font-serif flex-col text-center h-screen mx-auto items-center justify-center px-12 max-w-xl space-y-8"
-      style={{ color: '#231400' }}
-    >
-      <Link href="/">
-        <a>
-          <Image
-            src="/timfeeley.png"
-            alt="Tim Feeley"
-            className="w-48 mx-auto rounded-full"
-          />
-        </a>
-      </Link>
-      <h1 className="font-sans font-bold text-5xl" style={{ color: '#894D00' }}>
+    <Box
+      as="main"
+      css={{
+        mt: '60px',
+        maxWidth: '450px',
+        mx: '45px',
+        '@bp1': { mx: 'auto' }
+      }}>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Meet with Tim Feeley</title>
+      </Head>
+
+      <Image
+        css={{ ml: '-40px', mt: '25px' }}
+        rounded
+        alt="Tim Feeley"
+        width={200}
+        height={200}
+        src={'/timfeeley.png'}
+      />
+
+      <Heading size="3" css={{ mt: '25px' }}>
         Thanks!
-      </h1>
-      <p className="text-lg">Talk soon.</p>
-    </main>
+      </Heading>
+
+      <Paragraph size="2" css={{ mt: '25px' }}>
+        Talk soon
+      </Paragraph>
+    </Box>
   )
 }
 export default Meet

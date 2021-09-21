@@ -1,29 +1,95 @@
 @font-face {
-  font-family: 'Dossier';
-  font-weight: 700;
-  src: url('./DossierHeavy/font.woff2') format('woff2'),
-    url('./DossierHeavy/font.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Dossier';
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-regular.woff2') format('woff2');
   font-weight: 400;
-  src: url('./DossierRegular/font.woff2') format('woff2'),
-    url('./DossierRegular/font.woff') format('woff');
+  font-style: normal;
 }
 
 @font-face {
-  font-family: 'Dossier';
-  src: url('./DossierItalic/font.woff2') format('woff2'),
-    url('./DossierItalic/font.woff') format('woff');
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-regular-italic.woff2') format('woff2');
   font-weight: 400;
   font-style: italic;
 }
 
 @font-face {
-  font-family: 'Dossier';
-  src: url('./DossierHeavyItalic/font.woff2') format('woff2'),
-    url('./DossierHeavyItalic/font.woff') format('woff');
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-medium-italic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-light-italic.woff2') format('woff2');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-bold-italic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Untited Sans';
+  src: url('untitled-sans-web-black-italic.woff2') format('woff2');
+  font-weight: 900;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('soehne-mono-web-buch.woff2') format('woff2');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('soehne-mono-web-buch-kursiv.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('soehne-mono-web-dreiviertelfett.woff2') format('woff2');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'Söhne Mono';
+  src: url('soehne-mono-web-dreiviertelfett.woff2') format('woff2');
   font-weight: 700;
   font-style: italic;
 }
