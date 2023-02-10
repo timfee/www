@@ -56,7 +56,7 @@ function SocialIcons() {
   const ICONS = [
     {
       name: 'LinkedIn',
-      href: 'https://linkedin.com/in/timfee',
+      href: 'https://linkedin.com/in/timfeeley',
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       svg: LinkedinSvg,
     },
