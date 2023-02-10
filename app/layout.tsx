@@ -6,6 +6,9 @@ import PlausibleProvider from 'next-plausible'
 
 import AnalyticsWrapper from '@/components/Analytics'
 import { Soehne, Tiempos } from '@/lib/fonts'
+import GithubSvg from '@/public/github.svg'
+import LinkedinSvg from '@/public/linkedin.svg'
+import TwitterSvg from '@/public/twitter.svg'
 
 export const metadata: Metadata = {
   robots: {
@@ -41,14 +44,50 @@ export default function RootLayout({
       <body className="from-husk-50/70 no-repeat m-0 h-full bg-gradient-to-br to-slate-50 bg-fixed antialiased">
         {children}
         <footer className="py-12 text-center">
-          <a
-            className="text-husk-800 text-xs underline"
-            href="https://github.com/timfee/www">
-            view source
-          </a>
+          <SocialIcons />
         </footer>
         <AnalyticsWrapper />
       </body>
     </html>
+  )
+}
+
+function SocialIcons() {
+  const ICONS = [
+    {
+      name: 'LinkedIn',
+      href: 'https://linkedin.com/in/timfee',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      svg: LinkedinSvg,
+    },
+    {
+      name: 'Twitter',
+      href: 'https://twitter.com/timfee',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      svg: TwitterSvg,
+    },
+    {
+      name: 'GitHub',
+      href: 'https://github.com/timfee',
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      svg: GithubSvg,
+    },
+  ]
+
+  return (
+    <section className="inline-flex space-x-6 text-slate-600">
+      {ICONS.map(({ name, href, svg: Svg }) => (
+        <a key={name} href={href} rel="noopener noreferrer" target="_blank">
+          <Svg alt={name} width="18" height="18" />
+        </a>
+      ))}
+      <a
+        className="text-xs text-slate-800 underline"
+        rel="noopener noreferrer"
+        target="_blank"
+        href="https://github.com/timfee/www">
+        view source
+      </a>
+    </section>
   )
 }
