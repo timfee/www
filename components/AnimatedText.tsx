@@ -38,7 +38,8 @@ export default function AnimatedText() {
       <motion.h2 {...animatedProps}>I believe in people</motion.h2>
       <motion.p {...animatedProps}>
         Each app and every device we use is created by people, for people. Not
-        merely <em>users</em>, but humans of all backgrounds, abilities and dreams.
+        merely <em>users</em>, but humans of all backgrounds, abilities and
+        dreams.
       </motion.p>
       <motion.h2 {...animatedProps}>I believe in you</motion.h2>
       <motion.p {...animatedProps}>
