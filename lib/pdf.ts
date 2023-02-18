@@ -1,5 +1,3 @@
-/* eslint-disable import/extensions */
-
 import { createWriteStream } from 'fs'
 import { resolve } from 'path'
 import { cwd } from 'process'
@@ -9,9 +7,58 @@ import colors from 'tailwindcss/colors'
 
 import resume from '@/resume.json'
 
+export const STYLES: {
+  [key: string]: {
+    font: string
+    size: number
+    color: string
+  }
+} = {
+  name: {
+    font: 'black',
+    size: 36,
+    color: colors.slate['800'],
+  },
+  summary: {
+    font: 'medium',
+    size: 15,
+    color: colors.slate['700'],
+  },
+  summaryemphasis: {
+    font: 'medium',
+    size: 15,
+    color: colors.slate['500'],
+  },
+  company: {
+    font: 'bold',
+    size: 18,
+    color: colors.slate['500'],
+  },
+  date: {
+    font: 'medium',
+    size: 9,
+    color: colors.slate['500'],
+  },
+  jobsummary: {
+    font: 'medium',
+    size: 12,
+    color: colors.slate['700'],
+  },
+  highlight: {
+    font: 'medium',
+    size: 9,
+    color: colors.slate['500'],
+  },
+}
+
 export function generatePdf() {
   const doc = new pdf({
-    margin: 75,
+    margins: {
+      top: 125,
+      bottom: 75,
+      left: 75,
+      right: 100,
+    },
   })
 
   doc.registerFont('standard', resolve(cwd(), 'fonts', 'soehne-buch.ttf'))
@@ -19,24 +66,31 @@ export function generatePdf() {
   doc.registerFont('bold', resolve(cwd(), 'fonts', 'soehne-halbfett.ttf'))
   doc.registerFont('black', resolve(cwd(), 'fonts', 'fett.ttf'))
 
-  nameBlock(doc)
-  workBlock(doc)
+  // * Name
+  applyStyle(doc, 'name')
+    .text(resume.basics.name, {
+      characterSpacing: -1,
+    })
+    .moveDown(0.1)
 
-  doc.pipe(createWriteStream('/Users/timfee/Desktop/resume.pdf')) // write to PDF
-  doc.end()
-}
+  // * Summary
+  formatEmphasisBlocks({
+    doc,
+    textInput: splitStringIntoLines(
+      resume.basics.summary,
+      resume.basics.summary.length + 1
+    ),
+    textFormat: 'summary',
+    emphasis: {
+      type: 'format',
+      format: 'summaryemphasis',
+    },
+    textOptions: {
+      characterSpacing: -0.25,
+    },
+  }).moveDown(1.6)
 
-function nameBlock(doc: PDFKit.PDFDocument) {
-  applyStyle(doc, 'name').text(resume.basics.name, {
-    characterSpacing: -1,
-  })
-
-  applyStyle(doc, 'summary').text(resume.basics.summary, {})
-
-  doc.moveDown(0.5)
-}
-
-function workBlock(doc: PDFKit.PDFDocument) {
+  // * Employment History
   const jobs = resume.work.entries()
   for (const [i, job] of jobs) {
     const dateRange = `${formatDate(job.startDate)} - ${formatDate(
@@ -48,67 +102,66 @@ function workBlock(doc: PDFKit.PDFDocument) {
     }
     doc.moveDown(0.4)
 
-    // --!-- Company name
+    // ** Company name
     const y = doc.y
     applyStyle(doc, 'company').text(job.name, {
       characterSpacing: -0.25,
     })
 
-    // --!-- Dates of Service
-    applyStyle(doc, 'date')
-
-    doc.text(
+    // ** Dates of service
+    applyStyle(doc, 'date').text(
       dateRange,
       doc.page.width -
         doc.page.margins.right -
         doc.widthOfString(dateRange, {
           characterSpacing: -0.25,
         }),
-      y + 7,
+      y + (STYLES['company'].size - STYLES['date'].size),
       {
         characterSpacing: -0.25,
         paragraphGap: 4,
       }
     )
 
-    doc.moveDown(0.2)
-    // --!-- Summary
-
-    parseHighlights({
+    // ** Role summary
+    formatEmphasisBlocks({
       doc,
-      textInput: splitStringIntoLines(job.summary, 85),
-      textFormat: {
-        width: doc.page.width - 3.5 * doc.page.margins.right,
+      textInput: splitStringIntoLines(job.summary, 65),
+      textFormat: 'jobsummary',
+      emphasis: {
+        type: 'highlight',
+        color: colors.yellow[100],
+      },
+      textOptions: {
+        // width: doc.page.width - 3.5 * doc.page.margins.right,
         characterSpacing: -0.25,
       },
     })
 
-    // applyStyle(doc, 'jobsummary').text(
-    //   job.summary,
-    //   doc.page.margins.left,
-    //   doc.y,
-    //   {
-    //     width: doc.page.width - 3.5 * doc.page.margins.right,
-    //     characterSpacing: -0.25,
-    //   }
-    // )
-
     doc.moveDown(0.4)
 
-    // --!-- Highlights
+    // ** Highlights
     for (const [j, highlight] of job.highlights.entries()) {
-      parseHighlights({
+      formatEmphasisBlocks({
         doc,
         textInput: splitStringIntoLines(highlight, 85),
-        textFormat: {
-          width: doc.page.width - 3.5 * doc.page.margins.right,
-          characterSpacing: -0.25,
+        textFormat: 'highlight',
+        emphasis: {
+          type: 'highlight',
+          color: colors.yellow[100],
+        },
+        textOptions: {
+          // width: doc.page.width - 3.5 * doc.page.margins.right,
+          characterSpacing: -0.2,
         },
       })
       doc.moveDown(0.4)
     }
     doc.moveDown(0.8)
   }
+
+  doc.pipe(createWriteStream('/Users/timfee/Desktop/resume.pdf')) // write to PDF
+  doc.end()
 }
 
 function formatDate(date: string) {
@@ -118,53 +171,89 @@ function formatDate(date: string) {
   })
 }
 
-type ParseHighlightsProps = {
+type formatEmphasisBlocksProps = {
   doc: PDFKit.PDFDocument
   textInput: string[]
-  textFormat: PDFKit.Mixins.TextOptions
+  textFormat: Exclude<keyof typeof STYLES, number>
+  textOptions: PDFKit.Mixins.TextOptions
+  textXY?: { x?: number; y?: number }
+  emphasis:
+    | {
+        type: 'highlight'
+        color: string
+      }
+    | {
+        type: 'format'
+        format: Exclude<keyof typeof STYLES, number>
+      }
 }
-function parseHighlights({ doc, textInput, textFormat }: ParseHighlightsProps) {
-  const HIGHLIGHT_COLOR = colors.yellow[100]
-  const LINE_HEIGHT = 11
+function formatEmphasisBlocks({
+  doc,
+  emphasis,
+  textInput,
+  textFormat,
+  textOptions,
+  textXY,
+}: formatEmphasisBlocksProps) {
+  let y = textXY && textXY.y ? textXY.y : doc.y
+  if (emphasis.type === 'highlight') {
+    console.log(textInput)
+    for (const [k, line] of textInput.entries()) {
+      const matchRegex = /_.*?_/g
+      let match
 
-  let y = doc.y
+      const x =
+        textXY && textXY.x
+          ? textXY.x
+          : applyStyle(doc, textFormat).page.margins.left
 
-  for (const [k, line] of textInput.entries()) {
-    const underlineRegex = /_.*?_/g
-    let match
+      // Find and draw the highlights
+      while ((match = matchRegex.exec(line)) !== null) {
+        const matchStartIndex = match.index + 1
+        const matchText = match[0].replaceAll('_', ' ')
 
-    // Draw the entire line of text without highlights
-    const lineX = applyStyle(doc, 'highlight').page.margins.left
+        const matchTextWidth = doc.widthOfString(matchText, textOptions)
+        const matchTextX =
+          x +
+          doc.widthOfString(
+            line.replaceAll('_', ' ').substring(0, matchStartIndex - 1),
+            textOptions
+          )
 
-    // Find and draw the highlights
-    while ((match = underlineRegex.exec(line)) !== null) {
-      const matchStartIndex = match.index + 1
+        const height = doc.heightOfString(matchText)
+        const rectY = y + 0.5
+        doc
+          .roundedRect(matchTextX, rectY, matchTextWidth, height, 4)
+          .fill(emphasis.color)
+      }
 
-      // Calculate the x position and width of the highlight
-      const matchText = match[0].replaceAll('_', ' ')
+      applyStyle(doc, textFormat).text(
+        line.replaceAll('_', ' '),
+        x,
+        y,
+        textOptions
+      )
 
-      const matchTextWidth = doc.widthOfString(matchText)
-      const matchTextX =
-        lineX + doc.widthOfString(line.substring(0, matchStartIndex - 1))
-
-      // Draw the highlight
-      const height = LINE_HEIGHT + 2
-      const rectY = y
-      doc
-        .roundedRect(matchTextX, rectY, matchTextWidth, height, 4)
-        .fill(HIGHLIGHT_COLOR)
+      y += STYLES[textFormat].size + 2
     }
-
-    applyStyle(doc, 'highlight').text(
-      line.replaceAll('_', ' '),
-      lineX,
-      y,
-      textFormat
-    )
-
-    // Move the y position down to the next line
-    y += LINE_HEIGHT + 2
+  } else if (emphasis.type === 'format') {
+    const linesOfText = textInput.length
+    for (const [i, line] of textInput.entries()) {
+      const textFragments = line.split('_')
+      const fragmentsOfText = textFragments.length
+      for (const [j, fragment] of textFragments.entries()) {
+        applyStyle(doc, j % 2 === 0 ? textFormat : emphasis.format).text(
+          fragment,
+          {
+            ...textOptions,
+            continued: i < linesOfText - 1 || j < fragmentsOfText - 1,
+          }
+        )
+      }
+    }
   }
+
+  return doc
 }
 
 function splitStringIntoLines(input: string, charsPerLine: number): string[] {
@@ -197,63 +286,22 @@ function splitStringIntoLines(input: string, charsPerLine: number): string[] {
   return lines
 }
 
-type DocFormatProps = {
+function docFormat({
+  doc,
+  font,
+  size,
+  color,
+}: {
   doc: PDFKit.PDFDocument
   font: string
   size: number
   color: string
-}
-function docFormat({ doc, font, size, color }: DocFormatProps) {
+}) {
   return doc.font(font).fontSize(size).fillColor(color)
 }
 
 function applyStyle(doc: PDFKit.PDFDocument, style: string) {
-  switch (style) {
-    case 'name': {
-      return docFormat({
-        doc,
-        font: 'black',
-        size: 36,
-        color: colors.slate['800'],
-      })
-    }
-    case 'summary':
-      return docFormat({
-        doc,
-        font: 'medium',
-        size: 16,
-        color: colors.slate['700'],
-      })
+  const { font, size, color } = STYLES[style]
 
-    case 'company':
-      return docFormat({
-        doc,
-        font: 'bold',
-        size: 18,
-        color: colors.slate['500'],
-      })
-    case 'date':
-      return docFormat({
-        doc,
-        font: 'medium',
-        size: 9,
-        color: colors.slate['500'],
-      })
-    case 'jobsummary':
-      return docFormat({
-        doc,
-        font: 'medium',
-        size: 13,
-        color: colors.slate['600'],
-      })
-    case 'highlight':
-      return docFormat({
-        doc,
-        font: 'standard',
-        size: 10,
-        color: colors.slate['800'],
-      })
-    default:
-      return doc
-  }
+  return docFormat({ doc, font, size, color })
 }

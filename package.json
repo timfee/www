@@ -10,7 +10,7 @@
   "dependencies": {
     "framer-motion": "9.0.4",
     "markdown-it": "^13.0.1",
-    "next": "13.1.7-canary.18",
+    "next": "13.1.7-canary.20",
     "next-seo": "^5.15.0",
     "pdfkit": "^0.13.0",
     "react": "18.2.0",
@@ -28,7 +28,7 @@
     "@tailwindcss/typography": "0.5.9",
     "@types/markdown-it": "^12.2.3",
     "@types/mdast": "^3.0.10",
-    "@types/node": "18.13.0",
+    "@types/node": "18.14.0",
     "@types/pdfkit": "^0.12.8",
     "@types/prettier": "2.7.2",
     "@types/react": "18.0.28",

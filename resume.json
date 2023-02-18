@@ -262,7 +262,7 @@
     {
       "endDate": "2023-01-31",
       "highlights": [
-        "Evangelized 0 > 1 team and product charter to ship usable MVPs to secure staffing and cross-team commitments for scaled investment.",
+        "Evangelized _0 > 1 team_ and _product charter_ to ship usable MVPs to secure staffing and cross-team commitments for scaled investment.",
         "Extensive research allowed us to release policy templates that over _80% of teams_ could use out of the box, with zero additional configuration."
       ],
       "location": "San Francisco",
@@ -282,7 +282,7 @@
       "name": "Goldman Sachs",
       "position": "VP, Product Management, Identity & Account Opening",
       "startDate": "2022-01-31",
-      "summary": "Developed a customizable and centralized platform for account opening and identity management, serving 9M+ accounts while increasing signup conversion.",
+      "summary": "Developed a customizable and centralized platform for account opening and identity management, serving _9M+ accounts_ while incrementally increasing signup conversion.",
       "url": "https://www.linkedin.com/company/goldman-sachs/"
     },
     {
