@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
-const tailwindTypography = require('./tailwind.typography.cjs')
+const tailwindTypography = require('./tailwind.typography.js')
 const { fontFamily } = require('tailwindcss/defaultTheme')
 
 /** @type {import('tailwindcss').Config} */

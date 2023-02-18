@@ -1,5 +1,6 @@
-import Image from 'next/image'
 import type { HTMLProps } from 'react'
+
+import Image from 'next/image'
 
 import src from './image.png'
 

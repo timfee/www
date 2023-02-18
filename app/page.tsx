@@ -3,10 +3,12 @@ import type { Metadata } from 'next'
 import AnimatedText from '@/components/AnimatedText'
 import { Container } from '@/components/Container'
 import Headshot from '@/components/Headshot'
+import { generatePdf } from '@/lib/pdf'
 
 export const revalidate = 0
 
 export default function Home() {
+  generatePdf()
   return (
     <>
       <Headshot
