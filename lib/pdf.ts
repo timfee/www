@@ -1,307 +1,289 @@
-import { createWriteStream } from 'fs'
-import { resolve } from 'path'
-import { cwd } from 'process'
+import { createWriteStream } from "fs"
+import { resolve } from "path"
+import { cwd } from "process"
+import resume from "@/resume.json"
+import pdf from "pdfkit"
+import colors from "tailwindcss/colors"
 
-import pdf from 'pdfkit'
-import colors from 'tailwindcss/colors'
-
-import resume from '@/resume.json'
-
-export const STYLES: {
-  [key: string]: {
-    font: string
-    size: number
-    color: string
-  }
-} = {
-  name: {
-    font: 'black',
-    size: 36,
-    color: colors.slate['800'],
-  },
-  summary: {
-    font: 'medium',
-    size: 15,
-    color: colors.slate['700'],
-  },
-  summaryemphasis: {
-    font: 'medium',
-    size: 15,
-    color: colors.slate['500'],
-  },
-  company: {
-    font: 'bold',
-    size: 18,
-    color: colors.slate['500'],
-  },
-  date: {
-    font: 'medium',
-    size: 9,
-    color: colors.slate['500'],
-  },
-  jobsummary: {
-    font: 'medium',
-    size: 12,
-    color: colors.slate['700'],
-  },
-  highlight: {
-    font: 'medium',
-    size: 9,
-    color: colors.slate['500'],
-  },
-}
+import {
+  OT_FEATURES,
+  STYLES,
+  applyStyle,
+  formatDate,
+  formatEmphasisBlocks,
+  splitStringIntoLines,
+} from "./pdfutils"
 
 export function generatePdf() {
+  // #region  Create new PDF and register fonts
   const doc = new pdf({
+    bufferPages: true,
+    compress: true,
     margins: {
-      top: 125,
-      bottom: 75,
+      top: 100,
+      bottom: 50,
       left: 75,
       right: 100,
     },
   })
 
-  doc.registerFont('standard', resolve(cwd(), 'fonts', 'soehne-buch.ttf'))
-  doc.registerFont('medium', resolve(cwd(), 'fonts', 'soehne-kraftig.ttf'))
-  doc.registerFont('bold', resolve(cwd(), 'fonts', 'soehne-halbfett.ttf'))
-  doc.registerFont('black', resolve(cwd(), 'fonts', 'fett.ttf'))
+  doc.registerFont("standard", resolve(cwd(), "fonts", "sans-regular.ttf"))
+  doc.registerFont("medium", resolve(cwd(), "fonts", "sans-medium.ttf"))
+  doc.registerFont("bold", resolve(cwd(), "fonts", "sans-bold.ttf"))
+  doc.registerFont("black", resolve(cwd(), "fonts", "sans-black.ttf"))
+  // #endregion
 
-  // * Name
-  applyStyle(doc, 'name')
+  // Background
+  doc.rect(0, 0, doc.page.width, doc.page.height).fill(colors.slate["100"])
+
+  //#region  Name
+  applyStyle(doc, "name")
     .text(resume.basics.name, {
-      characterSpacing: -1,
+      characterSpacing: -1.5,
+      features: OT_FEATURES,
     })
     .moveDown(0.1)
 
-  // * Summary
+  //#endregion
+
+  //#region  Summary
   formatEmphasisBlocks({
     doc,
     textInput: splitStringIntoLines(
       resume.basics.summary,
       resume.basics.summary.length + 1
     ),
-    textFormat: 'summary',
+    textFormat: "summary",
     emphasis: {
-      type: 'format',
-      format: 'summaryemphasis',
+      type: "format",
+      format: "summaryemphasis",
     },
     textOptions: {
-      characterSpacing: -0.25,
+      characterSpacing: -0.5,
+      features: OT_FEATURES,
     },
-  }).moveDown(1.6)
+  }).moveDown(1)
+  // #endregion
 
-  // * Employment History
+  // #region  Work experience
   const jobs = resume.work.entries()
   for (const [i, job] of jobs) {
+    // #region Page or section break
+    if (doc.y > doc.page.height * 0.75) {
+      doc.addPage({
+        margins: {
+          top: 100,
+          bottom: 50,
+          left: 75,
+          right: 75,
+        },
+      })
+      // Background
+      doc.rect(0, 0, doc.page.width, doc.page.height).fill(colors.slate["100"])
+    } else {
+      doc.moveDown(1.25)
+    }
+    // #endregion
+
+    // #region Company name
+    const y = doc.y
+    applyStyle(doc, "company").text(job.name, {
+      characterSpacing: -0.5,
+      features: OT_FEATURES,
+    })
+    // #endregion
+
+    // #region Date range
     const dateRange = `${formatDate(job.startDate)} - ${formatDate(
       job.endDate
     )}`
 
-    if (doc.y > doc.page.height * 0.75) {
-      doc.addPage()
-    }
-    doc.moveDown(0.4)
-
-    // ** Company name
-    const y = doc.y
-    applyStyle(doc, 'company').text(job.name, {
-      characterSpacing: -0.25,
-    })
-
-    // ** Dates of service
-    applyStyle(doc, 'date').text(
+    applyStyle(doc, "date").text(
       dateRange,
       doc.page.width -
         doc.page.margins.right -
         doc.widthOfString(dateRange, {
           characterSpacing: -0.25,
+          features: OT_FEATURES,
         }),
-      y + (STYLES['company'].size - STYLES['date'].size),
+      y + (STYLES["company"].size - STYLES["date"].size),
       {
         characterSpacing: -0.25,
-        paragraphGap: 4,
+        features: OT_FEATURES,
       }
     )
+    // #endregion
+    doc.moveDown(0.5)
 
-    // ** Role summary
+    // #region Job summary
     formatEmphasisBlocks({
       doc,
-      textInput: splitStringIntoLines(job.summary, 65),
-      textFormat: 'jobsummary',
+      textInput: splitStringIntoLines(job.summary, 70),
+      textFormat: "jobsummary",
       emphasis: {
-        type: 'highlight',
+        type: "highlight",
         color: colors.yellow[100],
       },
       textOptions: {
-        // width: doc.page.width - 3.5 * doc.page.margins.right,
-        characterSpacing: -0.25,
+        characterSpacing: -0.33,
+        features: OT_FEATURES,
       },
     })
+    // #endregion
 
-    doc.moveDown(0.4)
+    doc.moveDown(0.6)
 
-    // ** Highlights
+    // #region Highlights
     for (const [j, highlight] of job.highlights.entries()) {
       formatEmphasisBlocks({
         doc,
-        textInput: splitStringIntoLines(highlight, 85),
-        textFormat: 'highlight',
+        textInput: splitStringIntoLines(highlight, 80),
+        textFormat: "highlight",
         emphasis: {
-          type: 'highlight',
+          type: "highlight",
           color: colors.yellow[100],
         },
         textOptions: {
-          // width: doc.page.width - 3.5 * doc.page.margins.right,
+          features: OT_FEATURES,
           characterSpacing: -0.2,
         },
       })
-      doc.moveDown(0.4)
+
+      doc.moveDown(0.5)
     }
-    doc.moveDown(0.8)
+    // #endregion
   }
+  // #endregion
+  doc.moveDown(1)
 
-  doc.pipe(createWriteStream('/Users/timfee/Desktop/resume.pdf')) // write to PDF
-  doc.end()
-}
+  // #region Education
+  const y = doc.y
+  applyStyle(doc, "education").text(
+    `${resume.education[0].studyType}, ${resume.education[0].area}`,
+    {
+      characterSpacing: -0.25,
+      features: OT_FEATURES,
+    }
+  )
+  applyStyle(doc, "highlight").text(
+    `${resume.education[0].institution} (${new Date(
+      resume.education[0].endDate
+    ).getFullYear()})`,
+    {
+      characterSpacing: -0.2,
+      features: OT_FEATURES,
+    }
+  )
+  // #endregion
 
-function formatDate(date: string) {
-  return new Date(date).toLocaleDateString('en-US', {
-    month: 'short',
-    year: 'numeric',
+  // #region Endorsement
+  const MOM_QUOTE = "“Pretty good with computers”",
+    MOM_BYLINE = "—Tim’s mom"
+
+  applyStyle(doc, "education").text(
+    MOM_QUOTE,
+    doc.page.width -
+      doc.page.margins.right -
+      doc.widthOfString(MOM_QUOTE, {
+        characterSpacing: -0.25,
+        features: OT_FEATURES,
+      }),
+    y,
+
+    {
+      width: doc.widthOfString(MOM_QUOTE, {
+        characterSpacing: -0.25,
+        features: OT_FEATURES,
+      }),
+      characterSpacing: -0.25,
+      features: OT_FEATURES,
+    }
+  )
+  applyStyle(doc, "highlight").text(
+    MOM_BYLINE,
+    doc.page.width -
+      doc.page.margins.right -
+      doc.widthOfString(MOM_BYLINE, {
+        characterSpacing: -0.1,
+        features: OT_FEATURES,
+      }),
+    doc.y,
+    {
+      characterSpacing: -0.2,
+      features: OT_FEATURES,
+    }
+  )
+  // #endregion
+  doc.moveDown(1.5)
+
+  // #region Mantra
+  const MANTRA_INTRO = "Three words I live by",
+    MANTRA = "“Clarity over comfort”",
+    MANTRA_DETAILS = `Sometimes it can be hard to speak up, especially when the pressure is on or anxieties are high. These are precisely the times to take a deep breath and push through the discomfort to make yourself heard.
+Like most things in life, this is a learned practice—one I strive to develop in myself and bring to the teams I support.`
+
+  applyStyle(doc, "mantraintro")
+    .text(MANTRA_INTRO, doc.page.margins.left, doc.y, {
+      characterSpacing: -0.25,
+      features: OT_FEATURES,
+    })
+    .moveDown(0.25)
+
+  applyStyle(doc, "mantra")
+    .roundedRect(
+      doc.x,
+      doc.y,
+      doc.widthOfString(MANTRA, {
+        characterSpacing: -0.25,
+        features: OT_FEATURES,
+      }),
+      doc.heightOfString(MANTRA, {
+        characterSpacing: -0.25,
+        features: OT_FEATURES,
+      }),
+      4
+    )
+    .fill(colors.yellow[100])
+
+  applyStyle(doc, "mantra")
+    .text(MANTRA, { characterSpacing: -0.2, features: OT_FEATURES })
+    .moveDown(0.25)
+
+  applyStyle(doc, "mantradetails").text(MANTRA_DETAILS, {
+    characterSpacing: -0.2,
+    features: OT_FEATURES,
+    paragraphGap: 8,
+    lineGap: 1,
+    width: doc.page.width - 4 * doc.page.margins.right,
   })
-}
 
-type formatEmphasisBlocksProps = {
-  doc: PDFKit.PDFDocument
-  textInput: string[]
-  textFormat: Exclude<keyof typeof STYLES, number>
-  textOptions: PDFKit.Mixins.TextOptions
-  textXY?: { x?: number; y?: number }
-  emphasis:
-    | {
-        type: 'highlight'
-        color: string
-      }
-    | {
-        type: 'format'
-        format: Exclude<keyof typeof STYLES, number>
-      }
-}
-function formatEmphasisBlocks({
-  doc,
-  emphasis,
-  textInput,
-  textFormat,
-  textOptions,
-  textXY,
-}: formatEmphasisBlocksProps) {
-  let y = textXY && textXY.y ? textXY.y : doc.y
-  if (emphasis.type === 'highlight') {
-    console.log(textInput)
-    for (const [k, line] of textInput.entries()) {
-      const matchRegex = /_.*?_/g
-      let match
+  // #endregion
 
-      const x =
-        textXY && textXY.x
-          ? textXY.x
-          : applyStyle(doc, textFormat).page.margins.left
+  // #region Pagination
+  const pages = doc.bufferedPageRange()
+  for (let i = 0; i < pages.count; i++) {
+    doc.switchToPage(i)
 
-      // Find and draw the highlights
-      while ((match = matchRegex.exec(line)) !== null) {
-        const matchStartIndex = match.index + 1
-        const matchText = match[0].replaceAll('_', ' ')
+    const oldTopMargin = doc.page.margins.top
+    doc.page.margins.top = 0
 
-        const matchTextWidth = doc.widthOfString(matchText, textOptions)
-        const matchTextX =
-          x +
-          doc.widthOfString(
-            line.replaceAll('_', ' ').substring(0, matchStartIndex - 1),
-            textOptions
-          )
-
-        const height = doc.heightOfString(matchText)
-        const rectY = y + 0.5
-        doc
-          .roundedRect(matchTextX, rectY, matchTextWidth, height, 4)
-          .fill(emphasis.color)
-      }
-
-      applyStyle(doc, textFormat).text(
-        line.replaceAll('_', ' '),
-        x,
-        y,
-        textOptions
+    doc
+      .fillColor(colors.slate["400"])
+      .fontSize(7)
+      .text(
+        `page ${i + 1} of ${pages.count}`,
+        doc.page.width / 2 -
+          doc.widthOfString(`page ${i + 1} of ${pages.count}`) / 2,
+        20,
+        {
+          features: OT_FEATURES,
+          characterSpacing: -0.1,
+          width: doc.widthOfString(`page ${i + 1} of ${pages.count}`),
+        }
       )
-
-      y += STYLES[textFormat].size + 2
-    }
-  } else if (emphasis.type === 'format') {
-    const linesOfText = textInput.length
-    for (const [i, line] of textInput.entries()) {
-      const textFragments = line.split('_')
-      const fragmentsOfText = textFragments.length
-      for (const [j, fragment] of textFragments.entries()) {
-        applyStyle(doc, j % 2 === 0 ? textFormat : emphasis.format).text(
-          fragment,
-          {
-            ...textOptions,
-            continued: i < linesOfText - 1 || j < fragmentsOfText - 1,
-          }
-        )
-      }
-    }
+    doc.page.margins.top = oldTopMargin // ReProtect bottom margin
   }
 
-  return doc
-}
-
-function splitStringIntoLines(input: string, charsPerLine: number): string[] {
-  const words = input.split(/\s+/)
-  const lines = []
-  let line = ''
-
-  for (const word of words) {
-    if (line.length + word.length + 1 <= charsPerLine) {
-      line += word + ' '
-    } else {
-      lines.push(line.trim())
-      line = word + ' '
-    }
-  }
-
-  if (line.length > 0) {
-    lines.push(line.trim())
-  }
-
-  for (let i = 0; i < lines.length; i++) {
-    // calculate how many _s are in the line.
-    const underscores = (lines[i].match(/_/g) || []).length
-    if (underscores % 2 === 1) {
-      lines[i] += '_'
-      lines[i + 1] = '_' + lines[i + 1]
-    }
-  }
-
-  return lines
-}
-
-function docFormat({
-  doc,
-  font,
-  size,
-  color,
-}: {
-  doc: PDFKit.PDFDocument
-  font: string
-  size: number
-  color: string
-}) {
-  return doc.font(font).fontSize(size).fillColor(color)
-}
-
-function applyStyle(doc: PDFKit.PDFDocument, style: string) {
-  const { font, size, color } = STYLES[style]
-
-  return docFormat({ doc, font, size, color })
+  doc.pipe(createWriteStream("/Users/timfee/Desktop/resume.pdf"))
+  doc.end()
 }

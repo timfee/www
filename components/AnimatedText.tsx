@@ -1,9 +1,9 @@
-'use client'
-import type { HTMLMotionProps } from 'framer-motion'
-import { motion } from 'framer-motion'
+"use client"
+
+import { motion, type HTMLMotionProps } from "framer-motion"
 
 export default function AnimatedText() {
-  const animatedProps: HTMLMotionProps<'div'> = {
+  const animatedProps: HTMLMotionProps<"div"> = {
     variants: {
       hidden: { opacity: 0, y: 10 },
       show: {
@@ -23,11 +23,13 @@ export default function AnimatedText() {
       variants={{
         hidden: { opacity: 0 },
         show: { opacity: 1, transition: { staggerChildren: 0.25 } },
-      }}>
+      }}
+    >
       <motion.h1 {...animatedProps}>
-        Hi friend,{' '}
+        Hi friend<em>,</em>{" "}
         <span className="whitespace-nowrap">
-          I’m Tim<em className="sr-only"> Feeley</em>!
+          I<em>’</em>m Tim<span className="sr-only"> Feeley</span>
+          <em>!</em>
         </span>
       </motion.h1>
       <motion.h2 {...animatedProps}>I believe in technology </motion.h2>

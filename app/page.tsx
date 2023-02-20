@@ -1,9 +1,11 @@
-import type { Metadata } from 'next'
+import { Metadata } from "next"
+import colors from "@/tailwind.colors"
 
-import AnimatedText from '@/components/AnimatedText'
-import { Container } from '@/components/Container'
-import Headshot from '@/components/Headshot'
-import { generatePdf } from '@/lib/pdf'
+import { toRgb } from "@/lib/colors"
+import { generatePdf } from "@/lib/pdf"
+import AnimatedText from "@/components/AnimatedText"
+import { Container } from "@/components/Container"
+import Headshot from "@/components/Headshot"
 
 export const revalidate = 0
 
@@ -12,11 +14,20 @@ export default function Home() {
   return (
     <>
       <Headshot
-        className="absolute inset-x-0 top-0 z-10 mx-auto mt-12 inline-block w-fit"
+        className="absolute inset-x-0 top-0 z-10 mx-auto mt-24 inline-block w-fit"
         width={300}
       />
-      <Container as="section" className="mt-64">
-        <div className="prose prose-homehero card px-10 pb-6 pt-20 font-serif font-thin sm:px-[5rem]">
+      <Container
+        as="main"
+        className="mt-72 rounded-3xl bg-white"
+        style={{
+          boxShadow: `15px 15px 30px ${toRgb(
+            colors.schist[100],
+            0.6
+          )}, -15px -15px 30px ${toRgb(colors.yuma[100], 0.3)}`,
+        }}
+      >
+        <div className="prose prose-homehero px-10 pb-6 pt-20 font-serif sm:px-[5rem]">
           <AnimatedText />
         </div>
       </Container>
@@ -25,28 +36,8 @@ export default function Home() {
 }
 
 export const metadata: Metadata = {
-  title: {
-    absolute: 'Tim Feeley — Product manager. Friend.',
-  },
-  description:
-    'Hi, I’m Tim Feeley, a people-centric Product Manager from San Francisco.',
-  themeColor: '#E6E2C1',
+  title: "Tim Feeley — Product manager. Friend.",
   openGraph: {
-    title: {
-      absolute: 'Tim Feeley — Product manager. Friend.',
-    },
-    description:
-      'Hi, I’m Tim Feeley, a people-centric Product Manager from San Francisco.',
-    url: 'https://timfeeley.com',
-    siteName: 'Tim Feeley',
-    images: [
-      {
-        url: 'https://timfeeley.com/opengraph.jpg',
-        width: 1920,
-        height: 1080,
-      },
-    ],
-    locale: 'en-US',
-    type: 'website',
+    title: "Tim Feeley — Product manager. Friend.",
   },
 }
