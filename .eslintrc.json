@@ -2,9 +2,9 @@
   "$schema": "https://json.schemastore.org/eslintrc",
   "root": true,
   "extends": [
+    "next",
     "next/core-web-vitals",
     "plugin:tailwindcss/recommended",
-    "eslint:recommended",
     "prettier"
   ],
   "plugins": ["tailwindcss"],
@@ -16,7 +16,15 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js"],
-      "parser": "@typescript-eslint/parser"
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": "./tsconfig.json", // tells parser relative path of tsconfig.json
+        "ecmaFeatures": {
+          "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+      }
     }
   ]
 }

@@ -12,6 +12,7 @@ type LookupProps = {
     fromHour: number
     toHour: number
   }
+  calendarAllowList: string[]
 }
 
 type LookupReturn = { start: DateTime; end: DateTime }
@@ -28,165 +29,6 @@ auth.setCredentials({
 
 const calendar = google.calendar({ version: "v3", auth })
 
-async function returnAllCalendars() {
-  const calendarResponse = await calendar.calendarList.list({ auth })
-  if (!calendarResponse.data.items) {
-    return []
-  }
-  return calendarResponse.data.items.map((cal) => cal.id ?? "")
-}
-
-async function returnEventsInCalendar(calendarId: string) {
-  const calendarResponse = await calendar.events.list({
-    calendarId,
-    timeMin: DateTime.now().toISO(),
-    timeMax: DateTime.now().plus({ days: 7 }).toISO(),
-    maxResults: 2500,
-    singleEvents: true,
-    orderBy: "startTime",
-  })
-
-  return calendarResponse.data.items ?? []
-}
-
-async function returnEventsInAllCalendars() {
-  const allCalendars: string[] = await returnAllCalendars()
-  return (
-    await Promise.all(
-      allCalendars.map(
-        async (calendarId) => await returnEventsInCalendar(calendarId)
-      )
-    )
-  ).flat()
-}
-
-function groupEvents(calendarEvents: calendar_v3.Schema$Event[]) {
-  return calendarEvents.reduce((events, event) => {
-    if (!event.start || !event.end) {
-      return events
-    }
-    const startDateTime = DateTime.fromISO(event.start.dateTime ?? "")
-
-    const date = startDateTime.toISODate()
-    if (!events[date]) {
-      events[date] = []
-    }
-    events[date].push(event)
-    return events
-  }, {} as { [key: string]: calendar_v3.Schema$Event[] })
-}
-
-function groupAvailability(
-  availabilities: { start: DateTime; end: DateTime }[]
-) {
-  return availabilities.reduce((events, event) => {
-    const startDateTime = event.start
-
-    const date = startDateTime.toISODate()
-    if (!events[date]) {
-      events[date] = []
-    }
-    events[date].push(event)
-    return events
-  }, {} as { [key: string]: { start: DateTime; end: DateTime }[] })
-}
-
-// function groupEventsByDate(
-//   calendarEvents: {
-//     start?: calendar_v3.Schema$EventDateTime | DateTime
-//     end?: calendar_v3.Schema$EventDateTime | DateTime
-//   }[]
-// ) {
-//   return calendarEvents
-//     .filter((event) => event.start && event.end)
-//     .reduce((events, event) => {
-//       let startDateTime: DateTime, endDateTime: DateTime
-
-//       if (!event.start) {
-//         throw new Error("event.start is undefined")
-//       } else if (event.start instanceof DateTime) {
-//         startDateTime = event.start as DateTime
-//       } else if ("dateTime" in event.start) {
-//         startDateTime = DateTime.fromISO(event.start.dateTime ?? "")
-//       } else if ("date" in event.start) {
-//         startDateTime = DateTime.fromISO(event.start.date ?? "").set({
-//           hour: 0,
-//           minute: 0,
-//           second: 0,
-//         })
-//       } else {
-//         throw new Error(
-//           "event.start is not a string or DateTime - it’s : " +
-//             JSON.stringify(event.start)
-//         )
-//       }
-//       if (!event.end) {
-//         throw new Error("event.end is undefined")
-//       } else if (typeof event.end === "string") {
-//         endDateTime = DateTime.fromISO(event.end ?? "")
-//       } else if (event.end instanceof DateTime) {
-//         endDateTime = event.end as DateTime
-//       } else if ("dateTime" in event.end) {
-//         endDateTime = DateTime.fromISO(event.end.dateTime ?? "")
-//       } else if ("date" in event.end) {
-//         endDateTime = DateTime.fromISO(event.end.date ?? "").set({
-//           hour: 23,
-//           minute: 59,
-//           second: 59,
-//         })
-//       } else {
-//         throw new Error("event.end is not a string or DateTime")
-//       }
-
-//       const date = startDateTime.toISODate()
-//       if (!events[date]) {
-//         events[date] = []
-//       }
-//       events[date].push({ start: startDateTime, end: endDateTime })
-//       return events
-//     }, {} as { [key: string]: LookupReturn[] })
-// }
-
-function removeUnavailableSlots({
-  allPotentialSlots,
-  calendarEvents,
-  padding,
-}: {
-  allPotentialSlots: LookupReturn[]
-  calendarEvents?: calendar_v3.Schema$Event[]
-  padding: number
-}) {
-  console.log(calendarEvents, allPotentialSlots)
-  return allPotentialSlots.filter((slot) => {
-    let conflict = false
-
-    calendarEvents &&
-      calendarEvents.forEach((event) => {
-        if (event.start && event.end && event.transparency !== "transparent") {
-          const eventStart = DateTime.fromISO(event.start.dateTime ?? "").minus(
-            {
-              minutes: padding ?? 0,
-            }
-          )
-          const eventEnd = DateTime.fromISO(event.end.dateTime ?? "").plus({
-            minutes: padding ?? 0,
-          })
-
-          if (
-            // Slot starts in event
-            (eventStart <= slot.start && slot.start <= eventEnd) ||
-            // Slot ends in event
-            (eventStart <= slot.end && slot.end <= eventEnd) ||
-            // Event is in slot
-            (slot.start < eventStart && eventEnd < slot.end)
-          )
-            conflict = true
-        }
-      })
-    return !conflict
-  })
-}
-
 export default async function LookupTimes({
   to,
   from,
@@ -194,8 +36,13 @@ export default async function LookupTimes({
   padding,
   daily: { fromHour, toHour },
   daysAllowed,
+  calendarAllowList,
 }: LookupProps) {
-  const calendarEvents = await returnEventsInAllCalendars()
+  const calendarEvents = await returnEventsInAllCalendars({
+    to,
+    from,
+    calendarAllowList,
+  })
 
   const allPotentialSlots: LookupReturn[] = []
   let endDate = from.set({ hour: 0, minute: 0, second: 0 })
@@ -228,40 +75,6 @@ export default async function LookupTimes({
   let dailySlots = groupAvailability(allPotentialSlots)
   let recSlots = groupEvents(calendarEvents)
 
-  // console.log(
-  //   JSON.stringify(
-  //     Object.entries(dailySlots).map(([date, slots]) => {
-  //       return {
-  //         [date]: slots.map((slot) => {
-  //           return {
-  //             start: slot.start.toISO(),
-  //             end: slot.end.toISO(),
-  //           }
-  //         }),
-  //       }
-  //     }),
-  //     null,
-  //     2
-  //   )
-  // )
-
-  // console.log(
-  //   JSON.stringify(
-  //     Object.entries(recSlots).map(([date, slots]) => {
-  //       return {
-  //         [date]: slots.map((slot) => {
-  //           return {
-  //             start: slot.start,
-  //             end: slot.end,
-  //           }
-  //         }),
-  //       }
-  //     }),
-  //     null,
-  //     2
-  //   )
-  // )
-
   const recommendedSlots = Object.entries(dailySlots).reduce(
     (acc, [date, slots]) => {
       acc[date] = removeUnavailableSlots({
@@ -276,70 +89,195 @@ export default async function LookupTimes({
     {} as { [key: string]: LookupReturn[] }
   )
 
-  // Object.entries(recommendedSlots).map(([date, slotsV]) => {
-  //   console.log(date, slotsV)
-  // })
-
-  console.log(
-    JSON.stringify(
-      Object.entries(recommendedSlots).map(([date, slotsV]) => {
-        return {
-          [date]: slotsV.map((slotV) => {
-            return {
-              start: slotV.start.toISO(),
-              end: slotV.end.toISO(),
-            }
-          }),
-        }
-      }),
-      null,
-      2
-    )
-  )
-
-  console.log(recommendedSlots)
-
-  // let recommendedSlots = await removeUnavailableSlots({
-  //   padding,
-  //   calendarEvents,
-  //   allPotentialSlots,
-  // })
-
   return {
     dailySlots: recommendedSlots,
     contiguousChunks: getContiguousChunks(recommendedSlots),
   }
 }
 
-export function getContiguousChunks(availableTimes: {
+function getContiguousChunks(availableTimes: {
   [key: string]: LookupReturn[]
 }) {
   const timeslots = Object.values(availableTimes).flatMap((slots) => slots)
 
-  const results = timeslots.reduce((chunks, timeslot) => {
-    const currentChunk = chunks[chunks.length - 1]
-    if (!currentChunk || currentChunk.end !== timeslot.start) {
-      chunks.push(timeslot)
+  const results = timeslots.reduce((groups, timeslot) => {
+    const date = timeslot.start.toISODate()
+    const currentGroup = groups[date] ?? []
+    const lastTimeslot = currentGroup[currentGroup.length - 1]
+
+    if (!lastTimeslot || lastTimeslot.end !== timeslot.start) {
+      currentGroup.push(timeslot)
     } else {
-      currentChunk.end = timeslot.end
+      lastTimeslot.end = timeslot.end
     }
-    return chunks
-  }, [] as LookupReturn[])
+
+    groups[date] = currentGroup
+    return groups
+  }, {} as { [key: string]: LookupReturn[] })
+
   return results
 }
 
-type DailyBucketsReturn = { [key: string]: LookupReturn[] }
-export function createDailyBuckets(availableTimes: LookupReturn[]) {
-  const foo = availableTimes.map((time) => ({ ...time }))
+async function returnAllCalendars({
+  calendarAllowList,
+}: {
+  calendarAllowList?: string[]
+}) {
+  if (calendarAllowList) {
+    return calendarAllowList
+  }
+  const calendarResponse = await calendar.calendarList.list({ auth })
+  if (!calendarResponse.data.items) {
+    return []
+  }
+  return calendarResponse.data.items.map((cal) => cal.id ?? "")
+}
 
-  const results = foo.reduce((acc, time) => {
-    const day = time.start.toISODate()
-    if (!acc[day]) {
-      acc[day] = []
+async function returnEventsInCalendar({
+  calendarId,
+  to,
+  from,
+}: {
+  calendarId: string
+  to: DateTime
+  from: DateTime
+}) {
+  const calendarResponse = await calendar.events.list({
+    calendarId,
+    timeMin: from.toISO(),
+    timeMax: to.toISO(),
+    maxResults: 2500,
+    singleEvents: true,
+    orderBy: "startTime",
+  })
+
+  return calendarResponse.data.items ?? []
+}
+
+async function returnEventsInAllCalendars({
+  to,
+  from,
+  calendarAllowList,
+}: {
+  to: DateTime
+  from: DateTime
+  calendarAllowList?: string[]
+}) {
+  const allCalendars: string[] = await returnAllCalendars({ calendarAllowList })
+  return (
+    await Promise.all(
+      allCalendars.map(
+        async (calendarId) =>
+          await returnEventsInCalendar({ calendarId, to, from })
+      )
+    )
+  ).flat()
+}
+
+function groupEvents(calendarEvents: calendar_v3.Schema$Event[]) {
+  return calendarEvents.reduce((eventsByDay, event) => {
+    let startDateTime = null,
+      endDateTime = null
+
+    if (!event.start || !event.end) {
+      throw new Error("Event has no start or end time")
     }
-    acc[day].push(time)
-    return acc
-  }, {} as DailyBucketsReturn)
+    if (event.start.date && event.end.date) {
+      console.log("\n\n\nmulti day mode", event)
+      startDateTime = DateTime.fromISO(event.start.date).startOf("day")
+      endDateTime = DateTime.fromISO(event.end.date).startOf("day")
 
-  return results
+      // Handle the event for all-day events
+      const numDays = endDateTime.diff(startDateTime, "days").days
+      console.log(numDays)
+      for (let i = 0; i < numDays; i++) {
+        const currDate = startDateTime.plus({ days: i })
+        const isoDate = currDate.toISODate()
+        console.log("*** Adding to ", currDate.toISO())
+        eventsByDay[isoDate] = eventsByDay[isoDate] || []
+        eventsByDay[isoDate].push({
+          ...event,
+          start: { dateTime: currDate.toISO() },
+          end: { dateTime: currDate.plus({ days: 1 }).toISO() },
+        })
+      }
+    } else if (event.start.dateTime && event.end.dateTime) {
+      // Event with start and end date/time
+      startDateTime = DateTime.fromISO(event.start.dateTime)
+      endDateTime = DateTime.fromISO(event.end.dateTime)
+
+      // Handle the event for non-all-day events
+      const startISODate = startDateTime.toISODate()
+      eventsByDay[startISODate] = eventsByDay[startISODate] || []
+      eventsByDay[startISODate].push(event)
+    } else {
+      return eventsByDay
+    }
+
+    // Group the events by day
+    return eventsByDay
+  }, {} as { [key: string]: calendar_v3.Schema$Event[] })
+}
+
+function groupAvailability(
+  availabilities: { start: DateTime; end: DateTime }[]
+) {
+  return availabilities.reduce((events, event) => {
+    const startDateTime = event.start
+
+    const date = startDateTime.toISODate()
+    if (!events[date]) {
+      events[date] = []
+    }
+    events[date].push(event)
+    return events
+  }, {} as { [key: string]: { start: DateTime; end: DateTime }[] })
+}
+
+function removeUnavailableSlots({
+  allPotentialSlots,
+  calendarEvents,
+  padding,
+}: {
+  allPotentialSlots: LookupReturn[]
+  calendarEvents?: calendar_v3.Schema$Event[]
+  padding: number
+}) {
+  console.log(
+    "Checking on ",
+    allPotentialSlots[0].start.toISO(),
+    " slots ",
+    allPotentialSlots.length,
+    " events ",
+    calendarEvents?.length ?? "0"
+  )
+  return allPotentialSlots.filter((slot) => {
+    let conflict = false
+
+    if (calendarEvents) {
+      calendarEvents.forEach((event) => {
+        if (event.start && event.end && event.transparency !== "transparent") {
+          const eventStart = DateTime.fromISO(event.start.dateTime ?? "").minus(
+            {
+              minutes: padding ?? 0,
+            }
+          )
+          const eventEnd = DateTime.fromISO(event.end.dateTime ?? "").plus({
+            minutes: padding ?? 0,
+          })
+
+          if (
+            // Slot starts in event
+            (eventStart <= slot.start && slot.start <= eventEnd) ||
+            // Slot ends in event
+            (eventStart <= slot.end && slot.end <= eventEnd) ||
+            // Event is in slot
+            (slot.start < eventStart && eventEnd < slot.end)
+          )
+            conflict = true
+        }
+      })
+    }
+    return !conflict
+  })
 }
