@@ -1,7 +1,7 @@
-import Image from 'next/image'
-import type { HTMLProps } from 'react'
+import type { HTMLProps } from "react"
+import Image from "next/image"
 
-import src from './image.png'
+import src from "./image.png"
 
 export default function Headshot({
   height: _height,

@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  @apply h-full;
-}
 body {
-  @apply subpixel-antialiased;
-  text-rendering: optimizeLegibility;
-  scroll-behavior: smooth;
-}
-
-.card {
-  background-color: #fff;
-  border-radius: 30px;
-  box-shadow: 15px 15px 30px rgba(243, 242, 230, 0.4),
-    -15px -15px 30px rgba(230, 226, 193, 0.7);
+  font-feature-settings: "ss01", "ss02", "kern", "liga", "clig", "calt", "dlig";
 }

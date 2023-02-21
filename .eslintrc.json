@@ -1,51 +1,29 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "plugins": ["@typescript-eslint", "prettier"],
+  "$schema": "https://json.schemastore.org/eslintrc",
+  "root": true,
   "extends": [
+    "next",
     "next/core-web-vitals",
-    "plugin:@typescript-eslint/recommended",
     "plugin:tailwindcss/recommended",
-    "prettier/prettier"
+    "prettier"
   ],
+  "plugins": ["tailwindcss"],
   "rules": {
-    "prettier/prettier": "error"
+    "@next/next/no-html-link-for-pages": "off",
+    "react/jsx-key": "off",
+    "tailwindcss/classnames-order": "error"
   },
   "overrides": [
     {
-      "extends": [
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:tailwindcss/recommended"
-      ],
-      "files": ["*.ts", "*.tsx"],
+      "files": ["*.ts", "*.tsx", "*.js"],
+      "parser": "@typescript-eslint/parser",
       "parserOptions": {
-        "project": "tsconfig.json"
-      },
-      "plugins": ["simple-import-sort", "import", "@typescript-eslint"],
-      "rules": {
-        "@typescript-eslint/consistent-type-imports": "warn",
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
-        "@typescript-eslint/no-unused-vars": [
-          "error",
-          {
-            "argsIgnorePattern": "^_",
-            "destructuredArrayIgnorePattern": "^_"
-          }
-        ],
-        "import/first": "error",
-        "import/newline-after-import": "error",
-        "import/no-duplicates": "error",
-        "prettier/prettier": "error",
-        "simple-import-sort/exports": "error",
-        "simple-import-sort/imports": "error",
-        "tailwindcss/no-custom-classname": "off"
+        "project": "./tsconfig.json", // tells parser relative path of tsconfig.json
+        "ecmaFeatures": {
+          "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
       }
     }
   ]
