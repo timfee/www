@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "tailwind.typography.js"
   ],
   "exclude": ["node_modules"]
 }
