@@ -47,7 +47,7 @@ export default async function LookupTimes({
   const allPotentialSlots: LookupReturn[] = []
   let endDate = from.set({ hour: 0, minute: 0, second: 0 })
 
-  const now = DateTime.now()
+  const now = DateTime.now().setZone("America/Los_Angeles")
 
   while (endDate < to) {
     const start = endDate
