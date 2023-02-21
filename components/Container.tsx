@@ -30,7 +30,7 @@ type Props = {
 }
 
 const styles = {
-  sm: "md:mx-auto mx-14 px-4 sm:px-6 max-w-2xl md:px-4 lg:px-2",
+  sm: "md:mx-auto mx-4 sm:mx-14 px-4 sm:px-6 max-w-2xl md:px-4 lg:px-2",
 }
 
 export function Container<C extends ElementType = "div">({
