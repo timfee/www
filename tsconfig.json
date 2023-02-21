@@ -28,7 +28,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "**/*.mjs",
+    "**/*.js",
     ".next/types/**/*.ts",
     "tailwind.typography.js"
   ],

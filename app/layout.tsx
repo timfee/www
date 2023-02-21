@@ -73,16 +73,19 @@ function SocialIcons() {
     {
       name: "LinkedIn",
       href: "https://linkedin.com/in/timfeeley",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       svg: LinkedinSvg,
     },
     {
       name: "Twitter",
       href: "https://twitter.com/timfee",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       svg: TwitterSvg,
     },
     {
       name: "GitHub",
       href: "https://github.com/timfee",
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       svg: GithubSvg,
     },
   ]

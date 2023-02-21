@@ -33,8 +33,7 @@ export default function Navigation({ className = "" }) {
           <Link
             key={href + title}
             href={href}
-            {...(asPath === href && { "aria-current": "page" })}
-          >
+            {...(asPath === href && { "aria-current": "page" })}>
             {title}
           </Link>
         ))}

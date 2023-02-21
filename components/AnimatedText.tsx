@@ -23,8 +23,7 @@ export default function AnimatedText() {
       variants={{
         hidden: { opacity: 0 },
         show: { opacity: 1, transition: { staggerChildren: 0.25 } },
-      }}
-    >
+      }}>
       <motion.h1 {...animatedProps}>
         Hi friend<em>,</em>{" "}
         <span className="whitespace-nowrap">

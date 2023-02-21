@@ -8,7 +8,7 @@ type LookupProps = {
   padding: number
   daysAllowed: number[]
   daily: {
-    timezone: string
+    timeZone: string
     fromHour: number
     toHour: number
   }
@@ -34,7 +34,7 @@ export default async function LookupTimes({
   from,
   slotDuration,
   padding,
-  daily: { fromHour, toHour },
+  daily: { fromHour, toHour, timeZone },
   daysAllowed,
   calendarAllowList,
 }: LookupProps) {
@@ -42,6 +42,7 @@ export default async function LookupTimes({
     to,
     from,
     calendarAllowList,
+    timeZone,
   })
 
   const allPotentialSlots: LookupReturn[] = []
@@ -72,8 +73,8 @@ export default async function LookupTimes({
     endDate = end
   }
 
-  let dailySlots = groupAvailability(allPotentialSlots)
-  let recSlots = groupEvents(calendarEvents)
+  const dailySlots = groupAvailability(allPotentialSlots)
+  const recSlots = groupEvents(calendarEvents)
 
   const recommendedSlots = Object.entries(dailySlots).reduce(
     (acc, [date, slots]) => {
@@ -138,10 +139,12 @@ async function returnEventsInCalendar({
   calendarId,
   to,
   from,
+  timeZone,
 }: {
   calendarId: string
   to: DateTime
   from: DateTime
+  timeZone: string
 }) {
   const calendarResponse = await calendar.events.list({
     calendarId,
@@ -150,8 +153,9 @@ async function returnEventsInCalendar({
     maxResults: 2500,
     singleEvents: true,
     orderBy: "startTime",
+    timeZone,
   })
-  console.log(calendarResponse.data.items ?? [])
+
   return calendarResponse.data.items ?? []
 }
 
@@ -159,24 +163,28 @@ async function returnEventsInAllCalendars({
   to,
   from,
   calendarAllowList,
+  timeZone,
 }: {
   to: DateTime
   from: DateTime
   calendarAllowList?: string[]
+  timeZone: string
 }) {
-  const allCalendars: string[] = await returnAllCalendars({ calendarAllowList })
+  const allCalendars: string[] = await returnAllCalendars({
+    calendarAllowList,
+  })
   return (
     await Promise.all(
       allCalendars.map(
         async (calendarId) =>
-          await returnEventsInCalendar({ calendarId, to, from })
+          await returnEventsInCalendar({ calendarId, to, from, timeZone })
       )
     )
   ).flat()
 }
 
 function groupEvents(calendarEvents: calendar_v3.Schema$Event[]) {
-  return calendarEvents.reduce((eventsByDay, event) => {
+  const pre = calendarEvents.reduce((eventsByDay, event) => {
     let startDateTime = null,
       endDateTime = null
 
@@ -184,17 +192,16 @@ function groupEvents(calendarEvents: calendar_v3.Schema$Event[]) {
       throw new Error("Event has no start or end time")
     }
     if (event.start.date && event.end.date) {
-      console.log("\n\n\nmulti day mode", event)
       startDateTime = DateTime.fromISO(event.start.date).startOf("day")
       endDateTime = DateTime.fromISO(event.end.date).startOf("day")
 
       // Handle the event for all-day events
       const numDays = endDateTime.diff(startDateTime, "days").days
-      console.log(numDays)
+
       for (let i = 0; i < numDays; i++) {
         const currDate = startDateTime.plus({ days: i })
         const isoDate = currDate.toISODate()
-        console.log("*** Adding to ", currDate.toISO())
+
         eventsByDay[isoDate] = eventsByDay[isoDate] || []
         eventsByDay[isoDate].push({
           ...event,
@@ -204,20 +211,25 @@ function groupEvents(calendarEvents: calendar_v3.Schema$Event[]) {
       }
     } else if (event.start.dateTime && event.end.dateTime) {
       // Event with start and end date/time
-      startDateTime = DateTime.fromISO(event.start.dateTime)
-      endDateTime = DateTime.fromISO(event.end.dateTime)
+      startDateTime = DateTime.fromISO(event.start.dateTime).setZone(
+        event.start?.timeZone ?? "UTC"
+      )
+      endDateTime = DateTime.fromISO(event.end.dateTime).setZone(
+        event.end?.timeZone ?? "UTC"
+      )
 
       // Handle the event for non-all-day events
       const startISODate = startDateTime.toISODate()
+
       eventsByDay[startISODate] = eventsByDay[startISODate] || []
       eventsByDay[startISODate].push(event)
-    } else {
-      return eventsByDay
     }
 
     // Group the events by day
     return eventsByDay
   }, {} as { [key: string]: calendar_v3.Schema$Event[] })
+
+  return pre
 }
 
 function groupAvailability(
@@ -244,14 +256,6 @@ function removeUnavailableSlots({
   calendarEvents?: calendar_v3.Schema$Event[]
   padding: number
 }) {
-  console.log(
-    "Checking on ",
-    allPotentialSlots[0].start.toISO(),
-    " slots ",
-    allPotentialSlots.length,
-    " events ",
-    calendarEvents?.length ?? "0"
-  )
   return allPotentialSlots.filter((slot) => {
     let conflict = false
 

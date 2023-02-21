@@ -18,19 +18,17 @@ export default async function Page() {
     daily: {
       fromHour: 9,
       toHour: 17,
-      timezone: "America/Los_Angeles",
+      timeZone: "America/Los_Angeles",
     },
     calendarAllowList: ["primary"],
   })
 
-  const availability = Object.entries(slots.contiguousChunks)
+  const availability = Object.entries(slots.dailySlots)
     .map(([date, slotsInDate]) => ({
       date: DateTime.fromISO(date),
       slotsInDate: slotsInDate,
     }))
     .flat()
-
-  console.log(availability)
 
   return (
     <div
@@ -38,54 +36,7 @@ export default async function Page() {
         fontFamily: "arial,sans-serif",
         lineHeight: "revert",
         padding: "revert",
-      }}>
-      {availability.map(({ date, slotsInDate }) => (
-        <>
-          <p
-            key={date.toISO()}
-            style={{
-              fontFamily: "arial,sans-serif",
-              lineHeight: "revert",
-              padding: "revert",
-            }}>
-            On{" "}
-            {date.toLocaleString({
-              weekday: "long",
-              month: "short",
-              day: "2-digit",
-            })}
-            :
-          </p>
-          <ul
-            style={{
-              listStyle: "revert",
-              padding: "revert",
-              margin: "revert",
-              fontFamily: "arial,sans-serif",
-            }}>
-            {slotsInDate.map(({ start, end }) => (
-              <li
-                style={{
-                  listStyle: "revert",
-                }}>
-                {start.toLocaleString({
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                })}{" "}
-                -{" "}
-                {end.toLocaleString({
-                  hour: "numeric",
-                  minute: "2-digit",
-                  hour12: true,
-                  timeZoneName: "short",
-                })}
-              </li>
-            ))}
-          </ul>
-        </>
-      ))}
-    </div>
+      }}></div>
   )
 }
 

@@ -21,7 +21,7 @@ export async function GET() {
     daily: {
       fromHour: 9,
       toHour: 17,
-      timezone: "America/Los_Angeles",
+      timeZone: "America/Los_Angeles",
     },
     calendarAllowList: ["primary"],
   })
