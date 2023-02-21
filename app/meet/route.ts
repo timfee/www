@@ -3,6 +3,7 @@ import { DateTime } from "luxon"
 import { default as main } from "@/lib/calendar"
 
 export const dynamic = "force-dynamic"
+export const revalidate = false
 
 export async function GET() {
   const today = DateTime.now()
