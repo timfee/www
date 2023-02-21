@@ -130,6 +130,7 @@ async function returnAllCalendars({
   if (!calendarResponse.data.items) {
     return []
   }
+
   return calendarResponse.data.items.map((cal) => cal.id ?? "")
 }
 
@@ -150,7 +151,7 @@ async function returnEventsInCalendar({
     singleEvents: true,
     orderBy: "startTime",
   })
-
+  console.log(calendarResponse.data.items ?? [])
   return calendarResponse.data.items ?? []
 }
 
