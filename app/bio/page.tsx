@@ -1,10 +1,9 @@
 import { Metadata } from "next"
 import Image from "next/image"
 import resume from "@/resume.json"
-import { ArrowDownIcon, BriefcaseIcon } from "@heroicons/react/24/outline"
+import { ArrowDownIcon } from "@heroicons/react/24/outline"
 
 import { formatDate } from "@/lib/pdfutils"
-import { Button } from "@/components/Button"
 import { Container } from "@/components/Container"
 
 export default function ResumePage() {
