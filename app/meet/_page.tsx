@@ -47,48 +47,6 @@ export default async function Page() {
           </>
         </div>
       ))}
-      <div>
-        {availability.map(({ date, slotsInDate }) => (
-          <>
-            <p key={date.toISO()} style={{ fontFamily: "arial,sans-serif" }}>
-              On{" "}
-              {date.toLocaleString({
-                weekday: "long",
-                month: "short",
-                day: "2-digit",
-              })}
-              :
-            </p>
-            <ul
-              style={{
-                listStyle: "revert",
-                padding: "revert",
-                margin: "revert",
-                fontFamily: "arial,sans-serif",
-              }}>
-              {slotsInDate.map(({ start, end }) => (
-                <li
-                  style={{
-                    listStyle: "revert",
-                  }}>
-                  {start.toLocaleString({
-                    hour: "numeric",
-                    minute: "2-digit",
-                    hour12: true,
-                  })}{" "}
-                  -{" "}
-                  {end.toLocaleString({
-                    hour: "numeric",
-                    minute: "2-digit",
-                    hour12: true,
-                    timeZoneName: "short",
-                  })}
-                </li>
-              ))}
-            </ul>
-          </>
-        ))}
-      </div>
     </>
   )
 }
