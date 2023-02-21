@@ -284,6 +284,6 @@ Like most things in life, this is a learned practice—one I strive to develop i
     doc.page.margins.top = oldTopMargin // ReProtect bottom margin
   }
 
-  doc.pipe(createWriteStream("/Users/timfee/Desktop/resume.pdf"))
+  doc.pipe(createWriteStream(resolve(cwd(), "public", "resume.pdf")))
   doc.end()
 }
