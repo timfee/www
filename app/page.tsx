@@ -2,7 +2,6 @@ import { Metadata } from "next"
 import colors from "@/tailwind.colors"
 
 import { toRgb } from "@/lib/colors"
-import { generatePdf } from "@/lib/pdf"
 import AnimatedText from "@/components/AnimatedText"
 import { Container } from "@/components/Container"
 import Headshot from "@/components/Headshot"
@@ -10,7 +9,6 @@ import Headshot from "@/components/Headshot"
 export const revalidate = 0
 
 export default function Home() {
-  generatePdf()
   return (
     <>
       <Headshot
@@ -25,8 +23,7 @@ export default function Home() {
             colors.schist[100],
             0.6
           )}, -15px -15px 30px ${toRgb(colors.yuma[100], 0.3)}`,
-        }}
-      >
+        }}>
         <div className="prose prose-homehero px-10 pb-6 pt-20 font-serif sm:px-[5rem]">
           <AnimatedText />
         </div>
