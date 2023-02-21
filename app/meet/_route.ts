@@ -5,7 +5,7 @@ import { default as main } from "@/lib/calendar"
 export const dynamic = "force-dynamic"
 export const revalidate = false
 
-export async function GET() {
+export async function POST() {
   const today = DateTime.now()
 
   const tomorrow = today

@@ -21,7 +21,7 @@ export default function RootLayout({
         <PlausibleProvider domain="hire.timfeeley.com" trackOutboundLinks />
       </head>
       <body className="m-0 h-full scroll-smooth bg-gradient-to-br from-yuma-50 to-casal-50 bg-fixed bg-no-repeat antialiased">
-        <Navigation />
+        {/* <Navigation /> */}
         {children}
         <footer className="py-12 text-center">
           <SocialIcons />
@@ -98,8 +98,7 @@ function SocialIcons() {
         className="text-xs text-slate-800 underline"
         rel="noopener noreferrer"
         target="_blank"
-        href="https://github.com/timfee/www"
-      >
+        href="https://github.com/timfee/www">
         view source
       </a>
     </section>
