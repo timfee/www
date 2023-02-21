@@ -5,8 +5,8 @@ import { default as main } from "@/lib/calendar"
 export const dynamic = "force-dynamic"
 export const revalidate = false
 
-export async function POST() {
-  const today = DateTime.now()
+export async function GET() {
+  const today = DateTime.now().setZone("America/Los_Angeles")
 
   const tomorrow = today
     .plus({ days: 7 })
