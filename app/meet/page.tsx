@@ -3,7 +3,7 @@ import { DateTime } from "luxon"
 import { default as main } from "@/lib/calendar"
 
 export default async function Page() {
-  const today = DateTime.now()
+  const today = DateTime.now().setZone("America/Los_Angeles")
 
   const tomorrow = today
     .plus({ days: 7 })
