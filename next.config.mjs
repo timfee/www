@@ -1,4 +1,4 @@
-import { withPlausibleProxy } from 'next-plausible'
+import { withPlausibleProxy } from "next-plausible"
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -6,17 +6,38 @@ const nextConfig = {
 
   webpack(config) {
     config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
+      test: /\.svg$/u,
+      use: ["@svgr/webpack"],
     })
 
     return config
   },
-
+  // eslint-disable-next-line require-await
+  async rewrites() {
+    return [
+      {
+        source: "/",
+        destination: "/hire",
+      },
+      {
+        source: "/:params*",
+        has: [
+          {
+            type: "host",
+            value: "hire.*",
+          },
+        ],
+        destination: "/hire/?id=:params*",
+      },
+    ]
+  },
   experimental: {
     appDir: true,
     swcMinify: true,
-    serverComponentsExternalPackages: ['pdfkit', 'markdown-it'],
+    serverComponentsExternalPackages: ["pdfkit", "markdown-it"],
+  },
+  serverRuntimeConfig: {
+    verbose: true,
   },
 }
 

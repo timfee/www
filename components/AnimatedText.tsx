@@ -1,8 +1,9 @@
 "use client"
 
 import { motion, type HTMLMotionProps } from "framer-motion"
+import type { FC } from "react"
 
-export default function AnimatedText() {
+const AnimatedText: FC = () => {
   const animatedProps: HTMLMotionProps<"div"> = {
     variants: {
       hidden: { opacity: 0, y: 10 },
@@ -18,16 +19,16 @@ export default function AnimatedText() {
 
   return (
     <motion.div
-      animate="show"
-      initial="hidden"
+      animate='show'
+      initial='hidden'
       variants={{
         hidden: { opacity: 0 },
         show: { opacity: 1, transition: { staggerChildren: 0.25 } },
       }}>
       <motion.h1 {...animatedProps}>
         Hi friend<em>,</em>{" "}
-        <span className="whitespace-nowrap">
-          I<em>’</em>m Tim<span className="sr-only"> Feeley</span>
+        <span className='whitespace-nowrap'>
+          I<em>’</em>m Tim<span className='sr-only'> Feeley</span>
           <em>!</em>
         </span>
       </motion.h1>
@@ -49,3 +50,5 @@ export default function AnimatedText() {
     </motion.div>
   )
 }
+
+export default AnimatedText

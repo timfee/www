@@ -1,5 +1,5 @@
-import type { ElementType } from "react"
 import clsx from "clsx"
+import type { ElementType } from "react"
 
 export type PropsOf<
   C extends keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>
@@ -9,17 +9,19 @@ type AsProp<C extends React.ElementType> = {
   as?: C
 }
 
-type ExtendableProps<ExtendedProps = {}, OverrideProps = {}> = OverrideProps &
-  Omit<ExtendedProps, keyof OverrideProps>
+type ExtendableProps<
+  ExtendedProps = unknown,
+  OverrideProps = unknown
+> = OverrideProps & Omit<ExtendedProps, keyof OverrideProps>
 
 type InheritableElementProps<
   C extends React.ElementType,
-  Props = {}
+  Props = unknown
 > = ExtendableProps<PropsOf<C>, Props>
 
 type PolymorphicComponentProps<
   C extends React.ElementType,
-  Props = {}
+  Props = unknown
 > = InheritableElementProps<C, Props & AsProp<C>>
 
 type ContainerProps<C extends ElementType> = PolymorphicComponentProps<C, Props>
@@ -33,12 +35,12 @@ const styles = {
   sm: "md:mx-auto mx-4 sm:mx-14 px-4 sm:px-6 max-w-2xl md:px-4 lg:px-2",
 }
 
-export function Container<C extends ElementType = "div">({
+export const Container = <C extends ElementType = "div">({
   size = "sm",
   className,
   as,
   ...props
-}: ContainerProps<C>) {
-  const Component = as || "div"
+}: ContainerProps<C>): JSX.Element => {
+  const Component = as ?? "div"
   return <Component className={clsx(styles[size], className)} {...props} />
 }

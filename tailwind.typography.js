@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 module.exports = function TypographyColors(theme) {
   return {
     DEFAULT: {
@@ -16,6 +17,7 @@ module.exports = function TypographyColors(theme) {
           fontStyle: "normal",
         },
         h1: {
+          color: theme("colors.casal.500"),
           margin: "0",
         },
       },

@@ -13,7 +13,7 @@ import {
   formatDate,
   formatEmphasisBlocks,
   splitStringIntoLines,
-} from "./pdfutils"
+} from "./helpers"
 import resume from "@/resume.json"
 
 export const generatePdf = (): void => {
@@ -39,6 +39,13 @@ export const generatePdf = (): void => {
   doc.rect(0, 0, doc.page.width, doc.page.height).fill(colors.slate["100"])
 
   // #region  Name
+  applyStyle(doc, "mantraintro")
+    .text(resume.basics.email, {
+      characterSpacing: -0.5,
+      features: OT_FEATURES,
+    })
+    .moveDown(0.1)
+
   applyStyle(doc, "name")
     .text(resume.basics.name, {
       characterSpacing: -1.5,
@@ -269,18 +276,19 @@ Like most things in life, this is a learned practice—one I strive to develop i
     const oldTopMargin = doc.page.margins.top
     doc.page.margins.top = 0
 
+    const headerString = `page ${i + 1} of ${pages.count}`
+
     doc
       .fillColor(colors.slate["400"])
       .fontSize(7)
       .text(
-        `page ${i + 1} of ${pages.count}`,
-        doc.page.width / 2 -
-          doc.widthOfString(`page ${i + 1} of ${pages.count}`) / 2,
+        headerString,
+        doc.page.width / 2 - doc.widthOfString(headerString) / 2,
         20,
         {
           features: OT_FEATURES,
           characterSpacing: -0.1,
-          width: doc.widthOfString(`page ${i + 1} of ${pages.count}`),
+          width: doc.widthOfString(headerString),
         }
       )
     doc.page.margins.top = oldTopMargin // ReProtect bottom margin

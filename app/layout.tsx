@@ -1,29 +1,28 @@
 import "./global.css"
+import clsx from "clsx"
 import type { Metadata } from "next"
+import PlausibleProvider from "next-plausible"
+import { headers } from "next/headers"
+import { NextRequest } from "next/server"
+import type { FC, PropsWithChildren } from "react"
+
+import AnalyticsWrapper from "@/components/Analytics"
+import Navigation from "@/components/Navigation"
+import { Sans, Serif } from "@/lib/fonts"
 import GithubSvg from "@/public/github.svg"
 import LinkedinSvg from "@/public/linkedin.svg"
 import TwitterSvg from "@/public/twitter.svg"
-import clsx from "clsx"
-import PlausibleProvider from "next-plausible"
 
-import { Sans, Serif } from "@/lib/fonts"
-import AnalyticsWrapper from "@/components/Analytics"
-import Navigation from "@/components/Navigation"
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   return (
-    <html lang="en" className={clsx("h-full", Sans.variable, Serif.variable)}>
+    <html lang='en' className={clsx("h-full", Sans.variable, Serif.variable)}>
       <head>
-        <PlausibleProvider domain="hire.timfeeley.com" trackOutboundLinks />
+        <PlausibleProvider domain='timfeeley.com' trackOutboundLinks />
       </head>
-      <body className="m-0 h-full scroll-smooth bg-gradient-to-br from-yuma-50 to-casal-50 bg-fixed bg-no-repeat antialiased">
-        {/* <Navigation /> */}
+      <body className='m-0 h-full scroll-smooth bg-gradient-to-br from-yuma-50 to-casal-50 bg-fixed bg-no-repeat antialiased'>
+        <Navigation />
         {children}
-        <footer className="py-12 text-center">
+        <footer className='py-12 text-center'>
           <SocialIcons />
         </footer>
         <AnalyticsWrapper />
@@ -68,42 +67,44 @@ export const metadata: Metadata = {
   viewport: "width=device-width, initial-scale=1",
 }
 
-function SocialIcons() {
+const SocialIcons = () => {
   const ICONS = [
     {
       name: "LinkedIn",
       href: "https://linkedin.com/in/timfeeley",
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
       svg: LinkedinSvg,
     },
     {
       name: "Twitter",
       href: "https://twitter.com/timfee",
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
       svg: TwitterSvg,
     },
     {
       name: "GitHub",
       href: "https://github.com/timfee",
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
       svg: GithubSvg,
     },
   ]
 
   return (
-    <section className="inline-flex space-x-6 text-slate-600">
+    <section className='inline-flex space-x-6 text-slate-600'>
       {ICONS.map(({ name, href, svg: Svg }) => (
-        <a key={name} href={href} rel="noopener noreferrer" target="_blank">
-          <Svg alt={name} width="18" height="18" />
+        <a key={name} href={href} rel='noopener noreferrer' target='_blank'>
+          <Svg alt={name} width='18' height='18' />
         </a>
       ))}
       <a
-        className="text-xs text-slate-800 underline"
-        rel="noopener noreferrer"
-        target="_blank"
-        href="https://github.com/timfee/www">
+        className='text-xs text-slate-800 underline'
+        rel='noopener noreferrer'
+        target='_blank'
+        href='https://github.com/timfee/www'>
         view source
       </a>
     </section>
   )
 }
+
+export default RootLayout
