@@ -10,6 +10,8 @@ export type DateAsStringInterval = {
   end: string
 }
 
+export type AvailabilityByDay = Record<string, DateInterval[]>
+
 export type AvailabilitySlot = {
   start: { hour: number; minute: number }
   end: { hour: number; minute: number }

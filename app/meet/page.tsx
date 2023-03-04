@@ -1,27 +1,27 @@
 import { add } from "date-fns"
 
-import ScheduleCanvas from "@/components/Schedule/Canvas"
-import { ScheduleProvider } from "@/components/Schedule/Context"
-import getAvailability from "@/utils/scheduler"
+import ScheduleProvider from "@/components/Schedule/Context"
+import SchedulePicker from "@/components/Schedule/Picker"
+import { getFreeBusyData } from "@/utils/scheduler/busy"
 import { mapDatesToStrings } from "@/utils/scheduler/helpers"
 
-const Meet = async (): Promise<JSX.Element> => {
+export default async function Meet() {
   const start = new Date()
-  const end = add(start, { days: 7 })
+  const end = add(start, { days: 14 })
+  const duration = 30
 
-  const times = await getAvailability({
+  const busy = await getFreeBusyData({
     start,
     end,
-    duration: 30,
   })
 
   return (
-    <div>
-      <ScheduleProvider availability={mapDatesToStrings(times)}>
-        <ScheduleCanvas />
-      </ScheduleProvider>
-    </div>
+    <ScheduleProvider
+      duration={duration}
+      busy={mapDatesToStrings(busy)}
+      start={start.toDateString()}
+      end={end.toDateString()}>
+      <SchedulePicker />
+    </ScheduleProvider>
   )
 }
-
-export default Meet

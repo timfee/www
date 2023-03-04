@@ -3,18 +3,23 @@
 import { add, areIntervalsOverlapping, sub } from "date-fns"
 
 import type { DateInterval } from "./types"
+import { SLOT_PADDING } from "./types"
 
 export function returnAvailableSlots({
   allSlots,
   busySlots,
-  padding,
+  padding = SLOT_PADDING,
 }: {
-  allSlots: DateInterval[]
-  busySlots: DateInterval[]
-  padding: number
+  allSlots?: DateInterval[]
+  busySlots?: DateInterval[]
+  padding?: number
 }): DateInterval[] {
   // Our final array of available slots
   const openSlots: DateInterval[] = []
+
+  if (allSlots === undefined || busySlots === undefined) {
+    return []
+  }
 
   // Make a deep copy of the allSlots array
   const remainingSlots = [...allSlots]

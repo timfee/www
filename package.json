@@ -8,27 +8,31 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
-    "@headlessui/react": "^1.7.12",
     "date-fns": "2.29.3",
     "date-fns-tz": "2.0.0",
     "framer-motion": "10.0.1",
     "googleapis": "^112.0.0",
-    "next": "13.2.3",
+    "ical-generator": "^3.6.1",
+    "next": "13.2.4-canary.1",
+    "nodemailer": "^6.9.1",
     "pdfkit": "^0.13.0",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "tailwind-merge": "^1.10.0"
   },
   "devDependencies": {
-    "@supabase/auth-helpers-nextjs": "^0.5.4",
+    "@supabase/auth-helpers-nextjs": "^0.5.5",
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.10.0",
     "@svgr/webpack": "^6.5.1",
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "0.5.9",
-    "@types/node": "18.14.4",
+    "@types/node": "18.14.6",
+    "@types/nodemailer": "^6.4.7",
+    "@types/nodemailer-smtp-transport": "^2.7.5",
     "@types/pdfkit": "^0.12.8",
     "@types/prettier": "2.7.2",
     "@types/react": "18.0.28",
@@ -59,10 +63,11 @@
     "extends": "galex",
     "rules": {
       "import/no-default-export": "off",
+      "@typescript-eslint/explicit-module-boundary-types": "off",
       "react/function-component-definition": [
         "error",
         {
-          "namedComponents": "arrow-function",
+          "namedComponents": "function-declaration",
           "unnamedComponents": "arrow-function"
         }
       ]

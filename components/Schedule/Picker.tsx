@@ -1,77 +1,95 @@
 "use client"
+
 import { utcToZonedTime } from "date-fns-tz"
-import type { FC } from "react"
 
+import { Container } from "../Container"
 import { useScheduleContext, useScheduleDispatchContext } from "./Context"
-import Timezone from "./Timezone"
-import type { DateInterval } from "@/utils/scheduler/types"
+import { availabilityByDate } from "@/utils/scheduler/helpers"
+import { returnAvailableSlots } from "@/utils/scheduler/offers"
 
-const SchedulePicker: FC = () => {
-  const { availability, timeZone } = useScheduleContext()
+import { Confirmer, Calendar, Duration, Timezone } from "./"
+
+export default function SchedulePicker() {
+  const { busy, availability, timeZone, selectedDate } = useScheduleContext()
   const dispatch = useScheduleDispatchContext()
-  const availabilityByDate: Record<string, DateInterval[]> =
-    availability?.reduce<Record<string, DateInterval[]>>((acc, curr) => {
-      const start = utcToZonedTime(curr.start, timeZone)
-      const end = utcToZonedTime(curr.end, timeZone)
-      const date = start.toDateString()
-      if (!acc[date]) {
-        acc[date] = []
-      }
-      acc[date].push({ start, end })
-      return acc
-    }, {}) ?? {}
+  const offers = availabilityByDate({
+    timeZone,
+    availability: returnAvailableSlots({
+      allSlots: availability,
+      busySlots: busy,
+    }),
+  })
+
+  const dateKeys = Object.keys(offers ?? {})
+
+  const start =
+    dateKeys.length > 0 ? utcToZonedTime(new Date(dateKeys[0]), timeZone) : null
+
+  const end =
+    dateKeys.length > 0
+      ? utcToZonedTime(new Date(dateKeys[dateKeys.length - 1]), timeZone)
+      : null
 
   return (
-    <>
-      <div className='w-96'>
+    <Container>
+      <Confirmer />
+      <div className='flex justify-between max-w-md mx-auto'>
         <Timezone />
+        <Duration />
       </div>
-      {Object.keys(availabilityByDate).map((date) => {
-        return (
-          <div key={date}>
-            <h2 suppressHydrationWarning>
-              {new Date(date).toLocaleDateString([], {
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              })}
-            </h2>
-            <ul>
-              {availabilityByDate[date].map((slot) => {
-                return (
-                  <li key={slot.start.toISOString()}>
-                    <button
-                      suppressHydrationWarning
-                      type='button'
-                      onClick={() => {
-                        dispatch({
-                          type: "setSelectedSlot",
-                          payload: slot,
-                        })
-                        dispatch({
-                          type: "setModalOpen",
-                          payload: true,
-                        })
-                      }}>
-                      {slot.start.toLocaleTimeString([], {
-                        hour: "numeric",
-                        minute: "numeric",
-                      })}{" "}
-                      -{" "}
-                      {slot.end.toLocaleTimeString([], {
-                        hour: "numeric",
-                        minute: "numeric",
-                      })}
-                    </button>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-        )
-      })}
-    </>
-  )
-}
 
-export default SchedulePicker
+      {start && end && <Calendar start={start} end={end} />}
+
+      <section className='flex flex-col space-y-4 w-[12rem] mx-auto'>
+        {selectedDate &&
+          offers &&
+          offers[selectedDate.toDateString()]?.map((slot) => {
+            return <TimeButton key={slot.start.toISOString()} slot={slot} />
+          })}
+      </section>
+    </Container>
+  )
+
+  function TimeButton({
+    slot: { start: _zonedStart, end: _zonedEnd },
+    ...props
+  }: {
+    slot: {
+      start: Date
+      end: Date
+    }
+  }) {
+    const start = utcToZonedTime(_zonedStart, timeZone)
+    const end = utcToZonedTime(_zonedEnd, timeZone)
+    return (
+      <button
+        {...props}
+        suppressHydrationWarning
+        type='button'
+        className='rounded-md bg-astronaut-600 py-1.5 px-2.5 text-sm font-semibold text-white shadow-sm hover:bg-astronaut-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-astronaut-600'
+        onClick={() => {
+          dispatch({
+            type: "setSelectedSlot",
+            payload: {
+              start,
+              end,
+            },
+          })
+          dispatch({
+            type: "setModalOpen",
+            payload: true,
+          })
+        }}>
+        {start.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "numeric",
+        })}{" "}
+        -{" "}
+        {end.toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "numeric",
+        })}
+      </button>
+    )
+  }
+}

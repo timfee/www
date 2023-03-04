@@ -1,10 +1,9 @@
 "use client"
 
-import type { Dispatch, FC, PropsWithChildren } from "react"
-import { useContext } from "react"
-import { createContext, useReducer } from "react"
+import type { Dispatch, PropsWithChildren } from "react"
+import { useContext, createContext, useReducer } from "react"
 
-import Modal from "./Modal"
+import { createAvailability } from "@/utils/scheduler/availability"
 import { mapStringsToDates } from "@/utils/scheduler/helpers"
 import type {
   DateAsStringInterval,
@@ -12,17 +11,25 @@ import type {
 } from "@/utils/scheduler/types"
 
 const INITIAL_STATE = {
+  start: new Date(),
+  end: new Date(),
   timeZone: "",
   modalOpen: false,
+  duration: 30,
 }
 
 type ScheduleState = {
-  timeZone: string
+  // user settings
   modalOpen: boolean
-  name?: string
-  email?: string
-  availability?: DateInterval[]
+  duration: number
+  timeZone: string
+  selectedDate?: Date
   selectedSlot?: DateInterval
+  // internal storage
+  start: Date
+  end: Date
+  busy?: DateInterval[]
+  availability?: DateInterval[]
 }
 type ScheduleAction =
   | {
@@ -34,20 +41,16 @@ type ScheduleAction =
       payload: boolean
     }
   | {
-      type: "setName"
-      payload: string
-    }
-  | {
-      type: "setEmail"
-      payload: string
-    }
-  | {
-      type: "setAvailability"
-      payload: DateAsStringInterval[]
-    }
-  | {
       type: "setSelectedSlot"
       payload: DateInterval
+    }
+  | {
+      type: "setSelectedDate"
+      payload: Date
+    }
+  | {
+      type: "setDuration"
+      payload: number
     }
 
 const ScheduleContext = createContext<ScheduleState>(INITIAL_STATE)
@@ -55,57 +58,44 @@ const ScheduleDispatchContext = createContext<Dispatch<ScheduleAction>>(
   () => null
 )
 
-const scheduleReducer = (
-  state: ScheduleState,
-  action: ScheduleAction
-): ScheduleState => {
-  switch (action.type) {
-    case "setTimeZone": {
-      return { ...state, timeZone: action.payload }
-    }
-    case "setModalOpen": {
-      return { ...state, modalOpen: action.payload }
-    }
-    case "setName": {
-      return { ...state, name: action.payload }
-    }
-    case "setEmail": {
-      return { ...state, email: action.payload }
-    }
-    case "setAvailability": {
-      return { ...state, availability: mapStringsToDates(action.payload) }
-    }
-    case "setSelectedSlot": {
-      return { ...state, selectedSlot: action.payload }
-    }
-    default: {
-      return state
-    }
-  }
-}
-
-export const ScheduleProvider: FC<
-  PropsWithChildren<{ availability: DateAsStringInterval[] }>
-> = ({ children, availability }) => {
+export default function ScheduleProvider({
+  children,
+  busy,
+  duration,
+  start: _startString,
+  end: _endString,
+}: PropsWithChildren<{
+  duration: number
+  busy: DateAsStringInterval[]
+  start: string
+  end: string
+}>) {
+  // eslint-disable-next-line new-cap
+  const { timeZone } = Intl.DateTimeFormat().resolvedOptions()
+  const start = new Date(_startString)
+  const end = new Date(_endString)
+  const availability = createAvailability({
+    start,
+    end,
+    duration,
+  })
   const [state, dispatch] = useReducer(scheduleReducer, {
-    ...INITIAL_STATE,
-    // eslint-disable-next-line new-cap
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    availability: mapStringsToDates(availability),
+    // immutable
+    start,
+    end,
+    busy: mapStringsToDates(busy),
+    // default
+    duration,
+    timeZone,
+    modalOpen: false,
+    // derived
+    selectedDate: new Date(availability.at(0)?.start ?? ""),
+    availability,
   })
 
   return (
     <ScheduleContext.Provider value={state}>
       <ScheduleDispatchContext.Provider value={dispatch}>
-        <Modal
-          open={state.modalOpen}
-          setOpen={(open) => {
-            dispatch({
-              type: "setModalOpen",
-              payload: open,
-            })
-          }}
-        />
         {children}
       </ScheduleDispatchContext.Provider>
     </ScheduleContext.Provider>
@@ -127,4 +117,38 @@ export function useScheduleDispatchContext(): Dispatch<ScheduleAction> {
     )
   }
   return useContext(ScheduleDispatchContext)
+}
+
+function scheduleReducer(
+  state: ScheduleState,
+  action: ScheduleAction
+): ScheduleState {
+  switch (action.type) {
+    case "setTimeZone": {
+      return { ...state, timeZone: action.payload }
+    }
+    case "setModalOpen": {
+      return { ...state, modalOpen: action.payload }
+    }
+    case "setDuration": {
+      return {
+        ...state,
+        availability: createAvailability({
+          start: state.start,
+          end: state.end,
+          duration: action.payload,
+        }),
+        duration: action.payload,
+      }
+    }
+    case "setSelectedSlot": {
+      return { ...state, selectedSlot: action.payload }
+    }
+    case "setSelectedDate": {
+      return { ...state, selectedDate: action.payload }
+    }
+    default: {
+      return state
+    }
+  }
 }

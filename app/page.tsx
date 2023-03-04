@@ -5,12 +5,12 @@ import { Container } from "@/components/Container"
 import Headshot from "@/components/Headshot"
 import { toRgb } from "@/lib/colors"
 import colors from "@/tailwind.colors"
-import { generatePdf } from "@/utils/resume"
 
 export const revalidate = 0
 
-const Home = async (): Promise<JSX.Element> => {
-  generatePdf()
+export default async function Home() {
+  // generatePdf()
+
   return (
     <>
       <Headshot
@@ -40,5 +40,3 @@ export const metadata: Metadata = {
     title: "Tim Feeley — Product manager. Friend.",
   },
 }
-
-export default Home

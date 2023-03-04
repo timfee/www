@@ -69,4 +69,5 @@ module.exports = {
   slate: colors.slate,
   white: colors.white,
   black: colors.black,
+  transparent: colors.transparent,
 }

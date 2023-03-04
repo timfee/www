@@ -1,24 +1,23 @@
 import { Combobox } from "@headlessui/react"
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid"
 import { getTimezoneOffset } from "date-fns-tz"
-import type { FC } from "react"
 import { useState } from "react"
 
 import { useScheduleContext, useScheduleDispatchContext } from "./Context"
 import cx from "@/lib/classes"
 
-const Timezone: FC = () => {
+export default function Timezone() {
   const [query, setQuery] = useState("")
 
-  const aryIannaTimeZones = Intl.supportedValuesOf("timeZone")
+  const timeZones = Intl.supportedValuesOf("timeZone")
 
   const { timeZone } = useScheduleContext()
   const dispatch = useScheduleDispatchContext()
 
   const filteredTimeZones =
     query === ""
-      ? aryIannaTimeZones
-      : aryIannaTimeZones.filter((timeZone) => {
+      ? timeZones
+      : timeZones.filter((timeZone) => {
           return timeZone.toLowerCase().includes(query.toLowerCase())
         })
 
@@ -35,7 +34,7 @@ const Timezone: FC = () => {
       <Combobox.Label className='block text-sm font-medium leading-6 text-slate-900'>
         Timezone
       </Combobox.Label>
-      <div className='relative mt-2'>
+      <div className='relative'>
         <Combobox.Input
           className='w-full rounded-md border-0 bg-white py-1.5 pl-3 pr-12 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 focus:ring-2 focus:ring-inset focus:ring-astronaut-600 sm:text-sm sm:leading-6'
           onChange={(event) => {
@@ -96,8 +95,6 @@ const Timezone: FC = () => {
     </Combobox>
   )
 }
-
-export default Timezone
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export declare namespace Intl {
