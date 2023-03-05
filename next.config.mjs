@@ -34,7 +34,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
     swcMinify: true,
-    // serverComponentsExternalPackages: ["pdfkit", "markdown-it"],
+    serverComponentsExternalPackages: ["pdfkit", "markdown-it"],
   },
 }
 
