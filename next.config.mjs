@@ -4,14 +4,14 @@ import { withPlausibleProxy } from "next-plausible"
 const nextConfig = {
   reactStrictMode: true,
 
-  webpack(config) {
-    config.module.rules.push({
-      test: /\.svg$/u,
-      use: ["@svgr/webpack"],
-    })
+  // webpack(config) {
+  //   config.module.rules.push({
+  //     test: /\.svg$/u,
+  //     use: ["@svgr/webpack"],
+  //   })
 
-    return config
-  },
+  //   return config
+  // },
   // eslint-disable-next-line require-await
   async rewrites() {
     return [
@@ -34,10 +34,7 @@ const nextConfig = {
   experimental: {
     appDir: true,
     swcMinify: true,
-    serverComponentsExternalPackages: ["pdfkit", "markdown-it"],
-  },
-  serverRuntimeConfig: {
-    verbose: true,
+    // serverComponentsExternalPackages: ["pdfkit", "markdown-it"],
   },
 }
 

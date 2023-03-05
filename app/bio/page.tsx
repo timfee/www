@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 
-import { Container } from "@/components/Container"
-import { Resume } from "@/components/Resume"
+import Container from "@/components/Container"
+import Resume from "@/components/Resume"
 
-const Bio = (): JSX.Element => {
+function Bio(): JSX.Element {
   return (
     <Container className='prose prose-bio prose-blue mt-12'>
       <h1>Tim Feeley’s Bio</h1>

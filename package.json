@@ -2,7 +2,7 @@
   "name": "timfeeley.com",
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "TZ='UTC' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -12,14 +12,14 @@
     "@heroicons/react": "^2.0.16",
     "date-fns": "2.29.3",
     "date-fns-tz": "2.0.0",
-    "framer-motion": "10.0.1",
+    "framer-motion": "10.0.2",
     "googleapis": "^112.0.0",
     "ical-generator": "^3.6.1",
-    "next": "13.2.4-canary.1",
+    "jotai": "^2.0.3",
+    "next": "13.2.3",
     "nodemailer": "^6.9.1",
     "pdfkit": "^0.13.0",
-    "react": "^18.2.0",
-    "react-dom": "18.2.0",
+    "react-timezone-select": "^1.4.0",
     "tailwind-merge": "^1.10.0"
   },
   "devDependencies": {
@@ -27,6 +27,8 @@
     "@supabase/auth-helpers-react": "^0.3.1",
     "@supabase/supabase-js": "^2.10.0",
     "@svgr/webpack": "^6.5.1",
+    "@swc-jotai/debug-label": "^0.0.6",
+    "@swc-jotai/react-refresh": "^0.0.4",
     "@tailwindcss/forms": "0.5.3",
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "0.5.9",
@@ -46,9 +48,12 @@
     "encoding": "^0.1.13",
     "eslint": "^8.35.0",
     "eslint-config-galex": "^4.4.2",
+    "eslint-config-next": "^13.2.3",
     "next-plausible": "3.7.2",
     "postcss": "8.4.21",
     "prettier": "2.8.4",
+    "react": "^18.2.0",
+    "react-dom": "18.2.0",
     "server-only": "^0.0.1",
     "sharp": "^0.31.3",
     "tailwindcss": "3.2.7",
@@ -60,9 +65,16 @@
     "bracketSameLine": true
   },
   "eslintConfig": {
-    "extends": "galex",
+    "extends": [
+      "galex"
+    ],
     "rules": {
+      "prefer-for-of": "off",
+      "@typescript-eslint/prefer-for-of": "off",
       "import/no-default-export": "off",
+      "promise/prefer-await-to-then": "off",
+      "promise/prefer-await-to-callbacks": "off",
+      "new-cap": "off",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "react/function-component-definition": [
         "error",

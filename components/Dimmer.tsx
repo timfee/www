@@ -2,9 +2,9 @@
 import { Switch } from "@headlessui/react"
 import { useState } from "react"
 
-import cx from "@/lib/classes"
+import cx from "@/utils/clsx"
 
-export const Dimmer = () => {
+export function Dimmer() {
   if (
     localStorage.theme === "dark" ||
     (!("theme" in localStorage) &&

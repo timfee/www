@@ -1,9 +1,8 @@
 "use client"
 
 import { motion, type HTMLMotionProps } from "framer-motion"
-import type { FC } from "react"
 
-const AnimatedText: FC = () => {
+export default function AnimatedText() {
   const animatedProps: HTMLMotionProps<"div"> = {
     variants: {
       hidden: { opacity: 0, y: 10 },
@@ -50,5 +49,3 @@ const AnimatedText: FC = () => {
     </motion.div>
   )
 }
-
-export default AnimatedText

@@ -2,18 +2,14 @@ import "./global.css"
 import clsx from "clsx"
 import type { Metadata } from "next"
 import PlausibleProvider from "next-plausible"
-import { headers } from "next/headers"
-import { NextRequest } from "next/server"
-import type { FC, PropsWithChildren } from "react"
+import type { PropsWithChildren } from "react"
 
 import AnalyticsWrapper from "@/components/Analytics"
+import { GithubSvg, LinkedInSvg, TwitterSvg } from "@/components/Logos"
 import Navigation from "@/components/Navigation"
-import { Sans, Serif } from "@/lib/fonts"
-import GithubSvg from "@/public/github.svg"
-import LinkedinSvg from "@/public/linkedin.svg"
-import TwitterSvg from "@/public/twitter.svg"
+import { Sans, Serif } from "@/utils/fonts"
 
-const RootLayout: FC<PropsWithChildren> = ({ children }) => {
+export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang='en' className={clsx("h-full", Sans.variable, Serif.variable)}>
       <head>
@@ -67,13 +63,13 @@ export const metadata: Metadata = {
   viewport: "width=device-width, initial-scale=1",
 }
 
-const SocialIcons = () => {
+function SocialIcons() {
   const ICONS = [
     {
       name: "LinkedIn",
       href: "https://linkedin.com/in/timfeeley",
 
-      svg: LinkedinSvg,
+      svg: LinkedInSvg,
     },
     {
       name: "Twitter",
@@ -93,7 +89,7 @@ const SocialIcons = () => {
     <section className='inline-flex space-x-6 text-slate-600'>
       {ICONS.map(({ name, href, svg: Svg }) => (
         <a key={name} href={href} rel='noopener noreferrer' target='_blank'>
-          <Svg alt={name} width='18' height='18' />
+          <Svg width='18' height='18' />
         </a>
       ))}
       <a
@@ -106,5 +102,3 @@ const SocialIcons = () => {
     </section>
   )
 }
-
-export default RootLayout

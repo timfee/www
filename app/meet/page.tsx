@@ -1,14 +1,11 @@
-import { add } from "date-fns"
-
-import ScheduleProvider from "@/components/Schedule/Context"
-import SchedulePicker from "@/components/Schedule/Picker"
-import { getFreeBusyData } from "@/utils/scheduler/busy"
+import SchedulePicker from "./picker"
+import { END_DATE, START_DATE } from "@/utils/scheduler"
+import getFreeBusyData from "@/utils/scheduler/getFreeBusyData"
 import { mapDatesToStrings } from "@/utils/scheduler/helpers"
 
 export default async function Meet() {
-  const start = new Date()
-  const end = add(start, { days: 14 })
-  const duration = 30
+  const start = START_DATE
+  const end = END_DATE
 
   const busy = await getFreeBusyData({
     start,
@@ -16,12 +13,10 @@ export default async function Meet() {
   })
 
   return (
-    <ScheduleProvider
-      duration={duration}
+    <SchedulePicker
       busy={mapDatesToStrings(busy)}
       start={start.toDateString()}
-      end={end.toDateString()}>
-      <SchedulePicker />
-    </ScheduleProvider>
+      end={end.toDateString()}
+    />
   )
 }

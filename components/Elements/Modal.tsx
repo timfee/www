@@ -1,7 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline"
-import type { FormEvent, FormEventHandler, PropsWithChildren } from "react"
-import { Fragment, useRef, useState } from "react"
+import type { FormEvent, PropsWithChildren } from "react"
+import { Fragment } from "react"
 
 export default function Modal({
   children,

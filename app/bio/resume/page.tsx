@@ -1,4 +1,4 @@
-import { generatePdf } from "@/lib/pdf"
+import { generatePdf } from "@/utils/resume"
 
 export default function ResumePage() {
   generatePdf()

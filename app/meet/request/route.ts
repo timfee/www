@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { createHash } from "crypto"
-import { utcToZonedTime } from "date-fns-tz"
 import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 
 import sendMail from "@/utils/email/send"
-import createAppointment from "@/utils/scheduler/booker"
-import { LOCAL_TIMEZONE } from "@/utils/scheduler/types"
+import { LOCAL_TIMEZONE } from "@/utils/scheduler"
+import createAppointment from "@/utils/scheduler/createCalendarAppointment"
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
@@ -66,15 +65,26 @@ export async function POST(request: NextRequest) {
   if (!data.name) {
     return new NextResponse()
   }
-  const start = utcToZonedTime(data.start, LOCAL_TIMEZONE)
-  const end = utcToZonedTime(data.end, LOCAL_TIMEZONE)
+  const start = new Date(data.start)
+  const end = new Date(data.end)
 
-  const body = `You have a new meeting request from ${data.name}:
-
-Start: ${new Date(start).toLocaleString()}
-End: ${new Date(end).toLocaleString()}
-
-(Their timezone is ${data.timeZone})
+  const body = `${data.name} would like to meet on ${new Date(
+    start
+  ).toLocaleString([], {
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    weekday: "long",
+    timeZone: LOCAL_TIMEZONE,
+  })} - ${new Date(end).toLocaleString([], {
+    hour: "numeric",
+    minute: "numeric",
+    timeZoneName: "short",
+    timeZone: LOCAL_TIMEZONE,
+  })} (${data.duration} minutes) via ${data.location} their timezone is ${
+    data.timeZone
+  }.
 
 To accept it, visit  ${origin}/meet/request/?data=${encodeURIComponent(
     JSON.stringify(data)
@@ -82,8 +92,34 @@ To accept it, visit  ${origin}/meet/request/?data=${encodeURIComponent(
 
   await sendMail({
     to: process.env.GOOGLE_CALENDAR_OWNER ?? "",
-    subject: "New Meet Request",
+    subject: "Meeting request",
     body,
+  })
+
+  await sendMail({
+    to: data.email,
+    subject: "Got your meeting request",
+    body: `Hi there,
+
+Just confirming that your meeting request for ${new Date(start).toLocaleString(
+      [],
+      {
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric",
+        weekday: "long",
+        timeZone: data.timeZone,
+      }
+    )} - ${new Date(end).toLocaleString([], {
+      hour: "numeric",
+      minute: "numeric",
+      timeZoneName: "shortGeneric",
+      timeZone: data.timeZone,
+    })} went through. I'll get back to you shortly to confirm!
+
+Thanks,
+—Tim`,
   })
 
   return NextResponse.json({ success: true })

@@ -2,13 +2,13 @@
 
 import { ArrowDownIcon } from "@heroicons/react/24/outline"
 import Image from "next/image"
-import type { FC, HTMLProps } from "react"
+import type { HTMLProps } from "react"
 
-import cx from "@/lib/classes"
-import { formatDate } from "@/lib/pdfutils"
 import resume from "@/resume.json"
+import cx from "@/utils/clsx"
+import { formatDate } from "@/utils/resume/helpers"
 
-export const Resume: FC<HTMLProps<HTMLDivElement>> = ({ className }) => {
+export default function Resume({ className }: HTMLProps<HTMLElement>) {
   return (
     <aside
       className={cx(

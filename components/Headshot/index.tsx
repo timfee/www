@@ -1,5 +1,5 @@
-import type { HTMLProps } from "react"
 import Image from "next/image"
+import type { HTMLProps } from "react"
 
 import src from "./image.png"
 
@@ -17,6 +17,8 @@ export default function Headshot({
     width = Math.round(height * ASPECT_RATIO)
   } else if (width) {
     height = Math.round(width / ASPECT_RATIO)
+  } else {
+    throw new Error("Headshot must have either a height or width")
   }
 
   return (
@@ -26,7 +28,7 @@ export default function Headshot({
         height={height}
         width={width}
         src={src}
-        alt="Tim Feeley"
+        alt='Tim Feeley'
       />
     </figure>
   )

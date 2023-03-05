@@ -23,7 +23,10 @@ const sendMail = async ({
 
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return transporter.sendMail({
-    from: process.env.GOOGLE_CALENDAR_OWNER,
+    from: {
+      address: process.env.GOOGLE_CALENDAR_OWNER,
+      name: "Tim Feeley",
+    },
     to,
     subject,
     text: body,
@@ -32,7 +35,6 @@ const sendMail = async ({
       refreshToken: process.env.GOOGLE_CALENDAR_REFRESH,
       accessToken: process.env.GOOGLE_CALENDAR_ACCESS,
     },
-    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   } as SendMailOptions & { auth: { user: string; refreshToken: string; accessToken: string } })
 }
 

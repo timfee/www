@@ -1,10 +1,10 @@
 import type { Metadata } from "next"
 
 import AnimatedText from "@/components/AnimatedText"
-import { Container } from "@/components/Container"
+import Container from "@/components/Container"
 import Headshot from "@/components/Headshot"
-import { toRgb } from "@/lib/colors"
 import colors from "@/tailwind.colors"
+import { toRgb } from "@/utils/colors"
 
 export const revalidate = 0
 

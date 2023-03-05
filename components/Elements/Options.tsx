@@ -1,8 +1,7 @@
 import { RadioGroup } from "@headlessui/react"
-import { CheckCircleIcon } from "@heroicons/react/20/solid"
 import { useState } from "react"
 
-import cx from "@/lib/classes"
+import cx from "@/utils/clsx"
 
 export default function Options({
   options,
@@ -14,13 +13,12 @@ export default function Options({
   options: {
     id: string
     title: string
-    description: string
   }[]
 }) {
-  const [selected, setSelected] = useState(options[0])
+  const [selected, setSelected] = useState(options[0].id)
 
   return (
-    <RadioGroup value={selected} onChange={setSelected}>
+    <RadioGroup name={name} value={selected} onChange={setSelected}>
       <RadioGroup.Label className='text-sm md:text-base font-semibold'>
         {title}
       </RadioGroup.Label>
@@ -28,7 +26,7 @@ export default function Options({
         {options.map((option, optionIdx) => (
           <RadioGroup.Option
             key={option.id}
-            value={option}
+            value={option.id}
             className={({ checked }) =>
               cx("relative flex cursor-pointer border p-4 focus:outline-none", {
                 "rounded-tl-md rounded-tr-md": optionIdx === 0,
@@ -60,14 +58,6 @@ export default function Options({
                     })}>
                     {option.title}
                   </RadioGroup.Label>
-                  <RadioGroup.Description
-                    as='span'
-                    className={cx("block text-xs sm:text-sm", {
-                      "text-astronaut-700": checked,
-                      "text-slate-500": !checked,
-                    })}>
-                    {option.description}
-                  </RadioGroup.Description>
                 </span>
               </>
             )}

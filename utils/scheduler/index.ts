@@ -1,28 +1,38 @@
-import { createAvailability } from "./availability"
-import { getFreeBusyData } from "./busy"
-import { returnAvailableSlots } from "./offers"
-import type { DateInterval } from "./types"
-import { SLOT_PADDING } from "./types"
+import { add } from "date-fns"
 
-export default async function getAvailability({
-  start,
-  end,
-  duration,
-}: DateInterval & { duration: number }): Promise<DateInterval[]> {
-  const allSlots = createAvailability({
-    start,
-    end,
-    duration,
-  })
+export { createAvailability } from "./createAvailability"
+export { getAvailableSlots } from "./getAvailableSlots"
+export * from "./helpers"
 
-  const busySlots = await getFreeBusyData({
-    start,
-    end,
-  })
+export const SLOT_PADDING = 0
+export const LOCAL_TIMEZONE = "America/Los_Angeles"
+export const START_DATE = new Date()
+export const END_DATE = add(START_DATE, { days: 14 })
 
-  return returnAvailableSlots({
-    allSlots,
-    busySlots,
-    padding: SLOT_PADDING,
-  })
+export const LOCAL_DATE_OPTIONS: Intl.DateTimeFormatOptions = {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  weekday: "long",
+}
+
+export const LOCAL_TIME_OPTIONS: Intl.DateTimeFormatOptions = {
+  hour: "numeric",
+  minute: "numeric",
+}
+
+export type DateInterval = {
+  start: Date
+  end: Date
+}
+export type DateAsStringInterval = {
+  start: string
+  end: string
+}
+
+export type AvailabilityByDay = Record<string, DateInterval[]>
+
+export type AvailabilitySlot = {
+  start: { hour: number; minute: number }
+  end: { hour: number; minute: number }
 }

@@ -12,10 +12,9 @@ import {
 } from "@heroicons/react/24/solid"
 import Link from "next/link"
 import { usePathname, useSelectedLayoutSegment } from "next/navigation"
-import type { FC, HTMLAttributes } from "react"
 
-import { Container } from "./Container"
-import cx from "@/lib/classes"
+import Container from "./Container"
+import cx from "@/utils/clsx"
 
 const NAVBAR_ITEMS = [
   {
@@ -51,7 +50,7 @@ const ICON_PROPERTIES = {
   className: "w-6 h-6 mr-2",
 }
 
-const Navigation: FC<HTMLAttributes<HTMLDivElement>> = ({ className = "" }) => {
+export default function Navigation() {
   const pathName = usePathname()
   const layoutSegment = useSelectedLayoutSegment()
 
@@ -91,5 +90,3 @@ const Navigation: FC<HTMLAttributes<HTMLDivElement>> = ({ className = "" }) => {
     </Container>
   )
 }
-
-export default Navigation

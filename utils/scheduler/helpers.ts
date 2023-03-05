@@ -1,6 +1,5 @@
-import { utcToZonedTime } from "date-fns-tz"
-
-import type { DateAsStringInterval, DateInterval } from "./types"
+import type { DateAsStringInterval, DateInterval } from "."
+import { LOCAL_DATE_OPTIONS, LOCAL_TIME_OPTIONS } from "."
 
 export const mapStringsToDates = (
   slots: DateAsStringInterval[]
@@ -22,14 +21,12 @@ export const mapDatesToStrings = (
 
 export const availabilityByDate = ({
   availability,
-  timeZone,
 }: {
   availability: DateInterval[]
-  timeZone: string
 }): Record<string, DateInterval[]> =>
   availability?.reduce<Record<string, DateInterval[]>>((acc, curr) => {
-    const start = utcToZonedTime(curr.start, timeZone)
-    const end = utcToZonedTime(curr.end, timeZone)
+    const { start } = curr
+    const { end } = curr
     const date = start.toDateString()
     if (!acc[date]) {
       acc[date] = []
@@ -37,3 +34,17 @@ export const availabilityByDate = ({
     acc[date].push({ start, end })
     return acc
   }, {}) ?? {}
+
+export const formatLocalDate = (
+  date: Date,
+  extraOptions: Intl.DateTimeFormatOptions
+) => {
+  return date.toLocaleDateString([], { ...LOCAL_DATE_OPTIONS, ...extraOptions })
+}
+
+export const formatLocalTime = (
+  date: Date,
+  extraOptions: Intl.DateTimeFormatOptions
+) => {
+  return date.toLocaleTimeString([], { ...LOCAL_TIME_OPTIONS, ...extraOptions })
+}
