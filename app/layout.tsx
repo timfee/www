@@ -6,7 +6,7 @@ import type { PropsWithChildren } from "react"
 
 import AnalyticsWrapper from "@/components/Analytics"
 import { GithubSvg, LinkedInSvg, TwitterSvg } from "@/components/Logos"
-import Navigation from "@/components/Navigation"
+// import Navigation from "@/components/Navigation"
 import { Sans, Serif } from "@/utils/fonts"
 
 export default function RootLayout({ children }: PropsWithChildren) {
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <PlausibleProvider domain='timfeeley.com' trackOutboundLinks />
       </head>
       <body className='m-0 h-full scroll-smooth bg-gradient-to-br from-yuma-50 to-casal-50 bg-fixed bg-no-repeat antialiased'>
-        <Navigation />
+        {/* <Navigation /> */}
         {children}
         <footer className='py-12 text-center'>
           <SocialIcons />
