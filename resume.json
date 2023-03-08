@@ -1,0 +1,153 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/schema.json",
+  "basics": {
+    "email": "tim@timfeeley.com",
+    "image": "https://timfeeley.com/illustration.png",
+    "label": "Product Management & UX Leader",
+    "location": {
+      "city": "San Francisco",
+      "countryCode": "US",
+      "postalCode": "94107",
+      "region": "California"
+    },
+    "name": "Tim Feeley",
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "url": "https://www.linkedin.com/in/timfeeley/",
+        "username": "timfeeley"
+      },
+      {
+        "network": "Twitter",
+        "url": "https://twitter.com/timfee",
+        "username": "timfee"
+      },
+      {
+        "network": "GitHub",
+        "url": "https://github.com/timfee",
+        "username": "timfee"
+      }
+    ],
+    "summary": "Nice to meet you! I design products with intention, build teams with care, and deliver results at a global scale. _Onwards, upwards, together._"
+  },
+  "certificates": [
+    {
+      "issuer": "Pragmatic Marketing",
+      "name": "Pragmatic Marketing Cerfified (PMC) Level II",
+      "startDate": "2010-02-28",
+      "url": "https://www.credly.com/badges/a9437e5e-f733-41ba-b9c3-be918bff7fb5/public_url"
+    },
+    {
+      "endDate": "2014-10-31",
+      "issuer": "Project Management Institute",
+      "name": "Project Management Professional (PMP)",
+      "startDate": "2007-10-31"
+    },
+    {
+      "endDate": "2014-11-30",
+      "issuer": "Scrum Alliance",
+      "name": "Certified Scrum Product Owner (CSPO)",
+      "startDate": "2010-10-31",
+      "url": "https://www.scrumalliance.org/community/profile/tfeeley"
+    }
+  ],
+  "education": [
+    {
+      "area": "Computer Science",
+      "endDate": "2005-12-31",
+      "institution": "University of Rhode Island",
+      "startDate": "2001-12-31",
+      "studyType": "B.A."
+    }
+  ],
+  "projects": [
+    {
+      "endDate": "2017-08-31",
+      "name": "Facebook News Feed Redesign",
+      "startDate": "2017-08-31",
+      "summary": "Starting late 2016, my team and the News Feed team set out to explore how we could make News Feed more readable, conversational, and easier to navigate. See the hard work of our designers, researchers and engineers here! ",
+      "url": "https://newsroom.fb.com/news/2017/08/making-news-feed-an-easier-place-to-connect-and-navigate/"
+    }
+  ],
+  "work": [
+    {
+      "endDate": "2023-01-31",
+      "highlights": [
+        "Guided the development of a 0 -> 1 team and product from MVP to pilot, significantly enhancing the security posture of hundreds of internal tools.",
+        "Built, validated and refined a security configuration language that enabled _80% of teams to quickly onboard_ with zero additional configuration."
+      ],
+      "location": "San Francisco",
+      "name": "Google",
+      "position": "Senior Product Manager, Data Protection",
+      "startDate": "2022-07-31",
+      "summary": "Implemented a comprehensive security strategy for sensitive internal tools, building a platform that significantly reduced developer effort and enhanced the security of Google’s infrastructure.",
+      "url": "https://www.linkedin.com/company/google/"
+    },
+    {
+      "endDate": "2022-07-31",
+      "highlights": [
+        "Consolidated identity capabilities across 6 lines of business, aligning functional teams and tech stacks, _decreasing operational costs by 30%._",
+        "Led dozens of local experiments to increase conversion by ••% and identify patterns for a next-gen multi channel onboarding UI system."
+      ],
+      "location": "New York City",
+      "name": "Goldman Sachs",
+      "position": "VP of Product, Identity & Account Opening",
+      "startDate": "2022-01-31",
+      "summary": "Designed and implemented an identity management and account opening platform that enhanced the experience for over _9 million customers_ and increased conversion rates for new signups.",
+      "url": "https://www.linkedin.com/company/goldman-sachs/"
+    },
+    {
+      "endDate": "2021-06-30",
+      "highlights": [
+        "_Reduced account lockouts by 40%_ and achieved successful KYC outcomes for millions of accounts by optimizing account messaging UI/UX",
+        "Drove _30% growth in active SMB usage_ by identifying a gap in our current offerings and partnering with cross-functional teams to create tailored accounts and onboarding.",
+        "Enabled the migration of millions of customer accounts across several acquisitions to Google’s Identity platform, improving customer experience and aligning records with Google's identity stack."
+      ],
+      "location": "Mountain View, California",
+      "name": "Google",
+      "position": "Senior Product Manager, Identity",
+      "startDate": "2017-11-30",
+      "summary": "Responsible for the end-to-end experiences _4B+ people_ use to create, access and manage their Google accounts, including the underlying internal and third-party APIs.",
+      "url": "https://www.linkedin.com/company/google/"
+    },
+    {
+      "endDate": "2017-10-31",
+      "highlights": [
+        "Drove a _3% increase in worldwide engagement and revenue_ by leading a significant UX refresh of News Feed for 2B+ MAUs and improving the UI to emphasize creation and conversations.",
+        "_Reduced design time by 15% for 300+ designers_ through the development of performant pre-built UX components and top-notch design tooling in the Facebook Design System.",
+        "Boosted topline app usage 1% through continuous pattern optimization that aligned the app design with user behavior patterns."
+      ],
+      "location": "Menlo Park, California",
+      "name": "Meta",
+      "position": "Product Manager, Facebook Design System",
+      "startDate": "2016-04-30",
+      "summary": "Responsible for the global Facebook UX library, providing the designs, code and guidance to craft beautiful, simple interfaces—with measurable results.",
+      "url": "https://www.linkedin.com/company/meta/"
+    },
+    {
+      "endDate": "2016-04-30",
+      "highlights": [
+        "Led a refresh of high-traffic SEO pages, resulting in _6x engagement increase_ with key brand features through UI and UX optimizations.",
+        "Led the redesign of photo and map experiences, resulting in a _100% increase in interaction rates_ and an increase in revenue.",
+        "Developed and launched faceted search, resulting in 30% increase in navigation success and a reduction in landing page bounces."
+      ],
+      "location": "Needham, Massachusetts",
+      "name": "Tripadvisor",
+      "position": "Director of Product, Core Site Experience",
+      "startDate": "2013-06-30",
+      "summary": "Created and led the Site Experience team, improving how travelers navigate and experience the site and apps, leading _seven reports, two managers & 30+ engineers._",
+      "url": "https://www.linkedin.com/company/tripadvisor/"
+    },
+    {
+      "endDate": "2013-05-31",
+      "highlights": [
+        "_Decreased paid subscription churn by 15%_ by improving profile discoverability, communication channels, and notification strategies."
+      ],
+      "location": "Cambridge, Massachusetts",
+      "name": "Online Buddies, Inc.",
+      "position": "Director of Product Management & User Experience",
+      "startDate": "2006-07-31",
+      "summary": "Built and led the PM, design, and research capabilities to support international expansion and product line development."
+    }
+  ]
+}
