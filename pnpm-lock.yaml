@@ -8,7 +8,7 @@ specifiers:
   '@supabase/supabase-js': ^2.10.0
   '@svgr/webpack': ^6.5.1
   '@swc-jotai/debug-label': ^0.0.9
-  '@swc-jotai/react-refresh': ^0.0.4
+  '@swc-jotai/react-refresh': ^0.0.7
   '@tailwindcss/forms': 0.5.3
   '@tailwindcss/line-clamp': ^0.4.2
   '@tailwindcss/typography': 0.5.9
@@ -71,7 +71,7 @@ devDependencies:
   '@supabase/supabase-js': 2.10.0_encoding@0.1.13
   '@svgr/webpack': 6.5.1
   '@swc-jotai/debug-label': 0.0.9
-  '@swc-jotai/react-refresh': 0.0.4
+  '@swc-jotai/react-refresh': 0.0.7
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.7
   '@tailwindcss/line-clamp': 0.4.2_tailwindcss@3.2.7
   '@tailwindcss/typography': 0.5.9_tailwindcss@3.2.7
@@ -2134,8 +2134,8 @@ packages:
     resolution: {integrity: sha512-rtsjXAMBh8VC5qNle+vfpdNxLJhY1sDMJSf5YfMtSdet/Ibtodb1DGNONGHDppiIsoBI2ORrQmz7O4CmzcWNfQ==}
     dev: true
 
-  /@swc-jotai/react-refresh/0.0.4:
-    resolution: {integrity: sha512-t5GEMFWDi6XZe/jIprLRh3k9vk6SolC1Rd21KpLnOcJS+YkycoX6Isfs2NiTR+5b6vynWahASvr0PKcrfBBbNQ==}
+  /@swc-jotai/react-refresh/0.0.7:
+    resolution: {integrity: sha512-8/DKZzqsvG+zhmq8BxB6Kx5uu89GkfRSPlv//3SPoNgBJW25oPyCKLD5ADkuyaBLxTzpKKgpkKC1rjSbOWpRCg==}
     dev: true
 
   /@swc/helpers/0.3.17:
