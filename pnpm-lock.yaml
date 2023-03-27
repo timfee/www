@@ -7,7 +7,7 @@ specifiers:
   '@supabase/auth-helpers-react': ^0.3.1
   '@supabase/supabase-js': ^2.10.0
   '@svgr/webpack': ^6.5.1
-  '@swc-jotai/debug-label': ^0.0.6
+  '@swc-jotai/debug-label': ^0.0.9
   '@swc-jotai/react-refresh': ^0.0.4
   '@tailwindcss/forms': 0.5.3
   '@tailwindcss/line-clamp': ^0.4.2
@@ -70,7 +70,7 @@ devDependencies:
   '@supabase/auth-helpers-react': 0.3.1_ku2vntnma2imfrsyohnkxzette
   '@supabase/supabase-js': 2.10.0_encoding@0.1.13
   '@svgr/webpack': 6.5.1
-  '@swc-jotai/debug-label': 0.0.6
+  '@swc-jotai/debug-label': 0.0.9
   '@swc-jotai/react-refresh': 0.0.4
   '@tailwindcss/forms': 0.5.3_tailwindcss@3.2.7
   '@tailwindcss/line-clamp': 0.4.2_tailwindcss@3.2.7
@@ -2130,8 +2130,8 @@ packages:
       - supports-color
     dev: true
 
-  /@swc-jotai/debug-label/0.0.6:
-    resolution: {integrity: sha512-rLJ/SbxeLyGzekICG09wVVq+SlOeou6pKNBJS7S30XtZ9M8cSRvI9ygsLDM5NnN9Sde3WbQG+a24rEfyuTPP/A==}
+  /@swc-jotai/debug-label/0.0.9:
+    resolution: {integrity: sha512-rtsjXAMBh8VC5qNle+vfpdNxLJhY1sDMJSf5YfMtSdet/Ibtodb1DGNONGHDppiIsoBI2ORrQmz7O4CmzcWNfQ==}
     dev: true
 
   /@swc-jotai/react-refresh/0.0.4:
