@@ -14,8 +14,8 @@ dependencies:
     specifier: 2.0.0
     version: 2.0.0(date-fns@2.29.3)
   framer-motion:
-    specifier: 10.0.2
-    version: 10.0.2(react-dom@18.2.0)(react@18.2.0)
+    specifier: 10.10.0
+    version: 10.10.0(react-dom@18.2.0)(react@18.2.0)
   googleapis:
     specifier: ^112.0.0
     version: 112.0.0(encoding@0.1.13)
@@ -4324,11 +4324,16 @@ packages:
     resolution: {integrity: sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==}
     dev: true
 
-  /framer-motion@10.0.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-1k8y1e6DMRQ/r6or4TBxRhE1cXlDE5bm+SFeWLeh7ng0sfSbpROC2Qd1OEHq6lLXNARar/KKoj/EQ6eIvn60Uw==}
+  /framer-motion@10.10.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-eCsyOcJimIRbx9KOzBTO3j9u1rF/H8/o/ybizYqdrzHkEeHx9L2NcEfGWfV0OHTc1JV17ECVzuZpomupEJ4+dw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
