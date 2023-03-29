@@ -14,14 +14,14 @@ dependencies:
     specifier: 2.0.0
     version: 2.0.0(date-fns@2.29.3)
   framer-motion:
-    specifier: 10.0.2
-    version: 10.0.2(react-dom@18.2.0)(react@18.2.0)
+    specifier: 10.10.0
+    version: 10.10.0(react-dom@18.2.0)(react@18.2.0)
   googleapis:
     specifier: ^112.0.0
     version: 112.0.0(encoding@0.1.13)
   ical-generator:
     specifier: ^3.6.1
-    version: 3.6.1(@types/node@18.14.6)
+    version: 3.6.1(@types/node@18.15.11)
   jotai:
     specifier: ^2.0.3
     version: 2.0.3(react@18.2.0)
@@ -70,8 +70,8 @@ devDependencies:
     specifier: 0.5.9
     version: 0.5.9(tailwindcss@3.3.0)
   '@types/node':
-    specifier: 18.14.6
-    version: 18.14.6
+    specifier: 18.15.11
+    version: 18.15.11
   '@types/nodemailer':
     specifier: ^6.4.7
     version: 6.4.7
@@ -139,8 +139,8 @@ devDependencies:
     specifier: ^0.0.1
     version: 0.0.1
   sharp:
-    specifier: ^0.31.3
-    version: 0.31.3
+    specifier: ^0.32.0
+    version: 0.32.0
   tailwindcss:
     specifier: 3.3.0
     version: 3.3.0(postcss@8.4.21)
@@ -2233,7 +2233,7 @@ packages:
   /@types/aws-sdk2-types@0.0.0:
     resolution: {integrity: sha512-GnEDlad7O4gu140g8Y0r5clvav/uoSOksxToXANj0UmqMfVcS2hIcJ6RryWvBrwXXPyyPa7xTW9otdiDSkH0DQ==}
     dependencies:
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
     dev: true
 
   /@types/caseless@0.12.2:
@@ -2248,8 +2248,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node@18.14.6:
-    resolution: {integrity: sha512-93+VvleD3mXwlLI/xASjw0FzKcwzl3OdTCzm1LaRfqgS21gfFtK3zDXM5Op9TeeMsJVOaJ2VRDpT9q4Y3d0AvA==}
+  /@types/node@18.15.11:
+    resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
 
   /@types/nodemailer-direct-transport@1.0.32:
     resolution: {integrity: sha512-1S0E405ghuApKUSH3x1dJpu/4Y8cQP4kQZ6BSLsfrM5uJB+IKKJuxCUVCDJoe3OTydPtzAoKFGggseXY97jlDw==}
@@ -2267,14 +2267,14 @@ packages:
   /@types/nodemailer-smtp-transport@2.7.5:
     resolution: {integrity: sha512-TziFYmQgyO9QuKvD3j7GcC6rnbp/Js9CEROm5h3u50AAeD8d8LcwoOlhosaEeMyPmy7fVXN63ZC1/MtjvzQViQ==}
     dependencies:
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
       '@types/nodemailer': 3.1.11
     dev: true
 
   /@types/nodemailer@3.1.11:
     resolution: {integrity: sha512-d9juwXW8pkT+GnwCUgpRv+E3i4sigwuASNUEKQYNryI6jd+yPs33MaG5MfZnsDtJItxINmcih01FzFfSYnpfeg==}
     dependencies:
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
       '@types/nodemailer-direct-transport': 1.0.32
       '@types/nodemailer-ses-transport': 1.5.3
       '@types/nodemailer-smtp-transport': 2.7.5
@@ -2283,7 +2283,7 @@ packages:
   /@types/nodemailer@6.4.7:
     resolution: {integrity: sha512-f5qCBGAn/f0qtRcd4SEn88c8Fp3Swct1731X4ryPKqS61/A3LmmzN8zaEz7hneJvpjFbUUgY7lru/B/7ODTazg==}
     dependencies:
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
     dev: true
 
   /@types/normalize-package-data@2.4.1:
@@ -2296,7 +2296,7 @@ packages:
   /@types/pdfkit@0.12.8:
     resolution: {integrity: sha512-4DTar9jO0qjbEWTSVM324+Eg1s4NFGNjesBwJETKfWojZetst4BB8b4SxjOKj/kS+5+AD8PGObpy7p1mkc/TcA==}
     dependencies:
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
     dev: true
 
   /@types/phoenix@1.5.5:
@@ -2333,7 +2333,7 @@ packages:
     resolution: {integrity: sha512-whjk1EDJPcAR2kYHRbFl/lKeeKYTi05A15K9bnLInCVroNDCtXce57xKdI0/rQaA3K+6q0eFyUBPmqfSndUZdQ==}
     dependencies:
       '@types/caseless': 0.12.2
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
       '@types/tough-cookie': 4.0.2
       form-data: 2.5.1
     dev: true
@@ -4324,11 +4324,16 @@ packages:
     resolution: {integrity: sha512-MhLuK+2gUcnZe8ZHlaaINnQLl0xRIGRfcGk2yl8xoQAfHrSsL3rYu6FCmBdkdbhc9EPlwyGHewaRsvwRMJtAlA==}
     dev: true
 
-  /framer-motion@10.0.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-1k8y1e6DMRQ/r6or4TBxRhE1cXlDE5bm+SFeWLeh7ng0sfSbpROC2Qd1OEHq6lLXNARar/KKoj/EQ6eIvn60Uw==}
+  /framer-motion@10.10.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-eCsyOcJimIRbx9KOzBTO3j9u1rF/H8/o/ybizYqdrzHkEeHx9L2NcEfGWfV0OHTc1JV17ECVzuZpomupEJ4+dw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
+    peerDependenciesMeta:
+      react:
+        optional: true
+      react-dom:
+        optional: true
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -4656,7 +4661,7 @@ packages:
       - supports-color
     dev: false
 
-  /ical-generator@3.6.1(@types/node@18.14.6):
+  /ical-generator@3.6.1(@types/node@18.15.11):
     resolution: {integrity: sha512-tEH0OTNn00Mp61DcTxIFR+5fhsAivKk1LWAJUAbkMCI+M4yu+cZzT5X8rZf3b5PzFkMogh0zj3PsFh9bHvGGIQ==}
     engines: {node: '>=12.0.0'}
     peerDependencies:
@@ -4689,7 +4694,7 @@ packages:
       rrule:
         optional: true
     dependencies:
-      '@types/node': 18.14.6
+      '@types/node': 18.15.11
       uuid-random: 1.3.2
     dev: false
 
@@ -5287,8 +5292,8 @@ packages:
       semver: 7.3.8
     dev: true
 
-  /node-addon-api@5.1.0:
-    resolution: {integrity: sha512-eh0GgfEkpnoWDq+VY8OyvYhFEzBk6jIYbRKdIlyTiAXIVJ8PyBaKb0rp7oDtoddbdoHWhq8wwr+XZ81F1rpNdA==}
+  /node-addon-api@6.0.0:
+    resolution: {integrity: sha512-GyHvgPvUXBvAkXa0YvYnhilSB1A+FRYMpIVggKzPZqdaZfevZOuzfWzyvgzOwRLHBeo/MMswmJFsrNF4Nw1pmA==}
     dev: true
 
   /node-fetch@2.6.7(encoding@0.1.13):
@@ -6002,14 +6007,14 @@ packages:
     resolution: {integrity: sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==}
     dev: true
 
-  /sharp@0.31.3:
-    resolution: {integrity: sha512-XcR4+FCLBFKw1bdB+GEhnUNXNXvnt0tDo4WsBsraKymuo/IAuPuCBVAL2wIkUw2r/dwFW5Q5+g66Kwl2dgDFVg==}
+  /sharp@0.32.0:
+    resolution: {integrity: sha512-yLAypVcqj1toSAqRSwbs86nEzfyZVDYqjuUX8grhFpeij0DDNagKJXELS/auegDBRDg1XBtELdOGfo2X1cCpeA==}
     engines: {node: '>=14.15.0'}
     requiresBuild: true
     dependencies:
       color: 4.2.3
       detect-libc: 2.0.1
-      node-addon-api: 5.1.0
+      node-addon-api: 6.0.0
       prebuild-install: 7.1.1
       semver: 7.3.8
       simple-get: 4.0.1
