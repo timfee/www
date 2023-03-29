@@ -16,7 +16,7 @@
     "googleapis": "^112.0.0",
     "ical-generator": "^3.6.1",
     "jotai": "^2.0.3",
-    "next": "13.2.3",
+    "next": "13.2.4",
     "nodemailer": "^6.9.1",
     "pdfkit": "^0.13.0",
     "react-timezone-select": "^1.4.0",
