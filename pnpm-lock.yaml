@@ -20,8 +20,8 @@ dependencies:
     specifier: ^112.0.0
     version: 112.0.0(encoding@0.1.13)
   ical-generator:
-    specifier: ^3.6.1
-    version: 3.6.1(@types/node@18.15.11)
+    specifier: ^4.0.0
+    version: 4.0.0(@types/node@18.15.11)
   jotai:
     specifier: ^2.0.3
     version: 2.0.3(react@18.2.0)
@@ -4661,9 +4661,9 @@ packages:
       - supports-color
     dev: false
 
-  /ical-generator@3.6.1(@types/node@18.15.11):
-    resolution: {integrity: sha512-tEH0OTNn00Mp61DcTxIFR+5fhsAivKk1LWAJUAbkMCI+M4yu+cZzT5X8rZf3b5PzFkMogh0zj3PsFh9bHvGGIQ==}
-    engines: {node: '>=12.0.0'}
+  /ical-generator@4.0.0(@types/node@18.15.11):
+    resolution: {integrity: sha512-zDjku0O3z/nj/XwgWvhj8vcGwZj/09097VelHLIpUJzjfPdUBNnYkYjSsjrHiwc0HodpSA0U4hiJgz8XerHGXw==}
+    engines: {node: ^14.8.0 || >=16.0.0}
     peerDependencies:
       '@touch4it/ical-timezones': '>=1.6.0'
       '@types/luxon': '>= 1.26.0'

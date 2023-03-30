@@ -14,7 +14,7 @@
     "date-fns-tz": "2.0.0",
     "framer-motion": "10.10.0",
     "googleapis": "^112.0.0",
-    "ical-generator": "^3.6.1",
+    "ical-generator": "^4.0.0",
     "jotai": "^2.0.3",
     "next": "13.2.4",
     "nodemailer": "^6.9.1",
