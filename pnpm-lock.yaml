@@ -17,8 +17,8 @@ dependencies:
     specifier: 10.10.0
     version: 10.10.0(react-dom@18.2.0)(react@18.2.0)
   googleapis:
-    specifier: ^112.0.0
-    version: 112.0.0(encoding@0.1.13)
+    specifier: ^114.0.0
+    version: 114.0.0(encoding@0.1.13)
   ical-generator:
     specifier: ^3.6.1
     version: 3.6.1(@types/node@18.15.11)
@@ -4567,8 +4567,8 @@ packages:
       - supports-color
     dev: false
 
-  /googleapis@112.0.0(encoding@0.1.13):
-    resolution: {integrity: sha512-WPfXhYZVrbbJRxB+ZZDksjuelmt49Mcl/1mo7w05kvLS1EbynvTELsNTJwh+hNrjsFKdh4izWLAcjTDo0Boycg==}
+  /googleapis@114.0.0(encoding@0.1.13):
+    resolution: {integrity: sha512-PbOSZXR0zkEfiX3P2mMW5CX9Kp981Te1bDJfm7Nei0ie9J5J0BscTsljro3POd0RsIQIDvNklJSAlQb6O84PtQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
       google-auth-library: 8.7.0(encoding@0.1.13)
