@@ -62,13 +62,13 @@ devDependencies:
     version: 0.0.7
   '@tailwindcss/forms':
     specifier: 0.5.3
-    version: 0.5.3(tailwindcss@3.3.0)
+    version: 0.5.3(tailwindcss@3.3.1)
   '@tailwindcss/line-clamp':
     specifier: ^0.4.2
-    version: 0.4.2(tailwindcss@3.3.0)
+    version: 0.4.2(tailwindcss@3.3.1)
   '@tailwindcss/typography':
     specifier: 0.5.9
-    version: 0.5.9(tailwindcss@3.3.0)
+    version: 0.5.9(tailwindcss@3.3.1)
   '@types/node':
     specifier: 18.15.11
     version: 18.15.11
@@ -142,8 +142,8 @@ devDependencies:
     specifier: ^0.32.0
     version: 0.32.0
   tailwindcss:
-    specifier: 3.3.0
-    version: 3.3.0(postcss@8.4.21)
+    specifier: 3.3.1
+    version: 3.3.1(postcss@8.4.21)
   typescript:
     specifier: 4.9.5
     version: 4.9.5
@@ -2178,24 +2178,24 @@ packages:
     dependencies:
       tslib: 2.5.0
 
-  /@tailwindcss/forms@0.5.3(tailwindcss@3.3.0):
+  /@tailwindcss/forms@0.5.3(tailwindcss@3.3.1):
     resolution: {integrity: sha512-y5mb86JUoiUgBjY/o6FJSFZSEttfb3Q5gllE4xoKjAAD+vBrnIhE4dViwUuow3va8mpH4s9jyUbUbrRGoRdc2Q==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
     dependencies:
       mini-svg-data-uri: 1.4.4
-      tailwindcss: 3.3.0(postcss@8.4.21)
+      tailwindcss: 3.3.1(postcss@8.4.21)
     dev: true
 
-  /@tailwindcss/line-clamp@0.4.2(tailwindcss@3.3.0):
+  /@tailwindcss/line-clamp@0.4.2(tailwindcss@3.3.1):
     resolution: {integrity: sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==}
     peerDependencies:
       tailwindcss: '>=2.0.0 || >=3.0.0 || >=3.0.0-alpha.1'
     dependencies:
-      tailwindcss: 3.3.0(postcss@8.4.21)
+      tailwindcss: 3.3.1(postcss@8.4.21)
     dev: true
 
-  /@tailwindcss/typography@0.5.9(tailwindcss@3.3.0):
+  /@tailwindcss/typography@0.5.9(tailwindcss@3.3.1):
     resolution: {integrity: sha512-t8Sg3DyynFysV9f4JDOVISGsjazNb48AeIYQwcL+Bsq5uf4RYL75C1giZ43KISjeDGBaTN3Kxh7Xj/vRSMJUUg==}
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
@@ -2204,7 +2204,7 @@ packages:
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       postcss-selector-parser: 6.0.10
-      tailwindcss: 3.3.0(postcss@8.4.21)
+      tailwindcss: 3.3.1(postcss@8.4.21)
     dev: true
 
   /@testing-library/dom@8.20.0:
@@ -6274,8 +6274,8 @@ packages:
     resolution: {integrity: sha512-WFnDXSS4kFTZwjKg5/oZSGzBRU/l+qcbv5NVTzLUQvJ9yovDAP05h0F2+ZFW0Lw9EcgRoc2AfURUdZvnEFrXKg==}
     dev: false
 
-  /tailwindcss@3.3.0(postcss@8.4.21):
-    resolution: {integrity: sha512-hOXlFx+YcklJ8kXiCAfk/FMyr4Pm9ck477G0m/us2344Vuj355IpoEDB5UmGAsSpTBmr+4ZhjzW04JuFXkb/fw==}
+  /tailwindcss@3.3.1(postcss@8.4.21):
+    resolution: {integrity: sha512-Vkiouc41d4CEq0ujXl6oiGFQ7bA3WEhUZdTgXAhtKxSy49OmKs8rEfQmupsfF0IGW8fv2iQkp1EVUuapCFrZ9g==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     peerDependencies:
