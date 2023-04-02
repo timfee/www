@@ -35,8 +35,8 @@ dependencies:
     specifier: ^0.13.0
     version: 0.13.0
   react-timezone-select:
-    specifier: ^1.4.0
-    version: 1.4.0(@types/react@18.0.32)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^2.0.0
+    version: 2.0.0(react-dom@18.2.0)(react-select@5.7.0)(react@18.2.0)
   tailwind-merge:
     specifier: ^1.10.0
     version: 1.10.0
@@ -5775,19 +5775,18 @@ packages:
       - '@types/react'
     dev: false
 
-  /react-timezone-select@1.4.0(@types/react@18.0.32)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-+DMHYMOSQe1Bmk58YyjKquSAj5Tdr1JSfluzPkqefrzQ8lzRCsymUEKnc195EsKvOOhseIEZ14k7lNrDOvPkWg==}
+  /react-timezone-select@2.0.0(react-dom@18.2.0)(react-select@5.7.0)(react@18.2.0):
+    resolution: {integrity: sha512-43CkCAjL0oP+LzYifVhzOUODwwA7WPfUPqIOwwQ0UCRs6UkJyJFohy3uOiJpnLoezie2G86csEW3PDvHFTRHNg==}
     peerDependencies:
       react: ^18 || ^17.0.1 || ^16
       react-dom: ^18 || ^17.0.1 || ^16
+      react-select: ^5.7.0
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-select: 5.7.0(@types/react@18.0.32)(react-dom@18.2.0)(react@18.2.0)
       spacetime: 7.4.1
       timezone-soft: 1.4.1
-    transitivePeerDependencies:
-      - '@types/react'
     dev: false
 
   /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):
