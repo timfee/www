@@ -1,7 +1,7 @@
 import Image from "next/image"
 import type { HTMLProps } from "react"
 
-import src from "./image.png"
+import source from "./image.png"
 
 export default function Headshot({
   height: _height,
@@ -27,8 +27,8 @@ export default function Headshot({
         priority
         height={height}
         width={width}
-        src={src}
-        alt='Tim Feeley'
+        src={source}
+        alt="Tim Feeley"
       />
     </figure>
   )

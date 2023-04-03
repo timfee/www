@@ -1,3 +1,3 @@
-export { default as GithubSvg } from "./GithubSvg"
-export { default as LinkedInSvg } from "./LinkedInSvg"
-export { default as TwitterSvg } from "./TwitterSvg"
+export { default as GithubSvg } from "./github"
+export { default as LinkedInSvg } from "./linkedin"
+export { default as TwitterSvg } from "./twitter"

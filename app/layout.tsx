@@ -1,27 +1,36 @@
-import "./global.css"
-import clsx from "clsx"
-import type { Metadata } from "next"
+import { clsx } from "clsx"
+import "./globals.css"
+import localFont from "next/font/local"
+import { Metadata } from "next"
 import PlausibleProvider from "next-plausible"
-import type { PropsWithChildren } from "react"
-
-import AnalyticsWrapper from "@/components/Analytics"
-import { GithubSvg, LinkedInSvg, TwitterSvg } from "@/components/Logos"
-// import Navigation from "@/components/Navigation"
-import { Sans, Serif } from "@/utils/fonts"
-
-export default function RootLayout({ children }: PropsWithChildren) {
+import { Analytics } from "@vercel/analytics/react"
+import Navbar from "./navbar"
+import { GithubSvg, LinkedInSvg, TwitterSvg } from "@/components/logos"
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html lang='en' className={clsx("h-full", Sans.variable, Serif.variable)}>
+    <html lang="en" className={clsx("h-full", Sans.variable, Serif.variable)}>
       <head>
-        <PlausibleProvider domain='timfeeley.com' trackOutboundLinks />
+        <PlausibleProvider
+          domain="timfeeley.com"
+          trackFileDownloads
+          trackOutboundLinks
+        />
       </head>
-      <body className='m-0 h-full scroll-smooth bg-gradient-to-br from-yuma-50 to-casal-50 bg-fixed bg-no-repeat antialiased'>
-        {/* <Navigation /> */}
+      <body>
+        <a id="top" />
+        <Navbar />
         {children}
-        <footer className='py-12 text-center'>
+        <Analytics />
+        <footer className="mx-auto pb-36 text-center">
+          <p className="mb-6 mt-20 text-slate-500">
+            <span className="mr-2 font-serif">✌️</span> Thanks for visiting{" "}
+          </p>
           <SocialIcons />
         </footer>
-        <AnalyticsWrapper />
       </body>
     </html>
   )
@@ -38,7 +47,7 @@ export const metadata: Metadata = {
     siteName: "Tim Feeley",
     images: [
       {
-        url: "https://timfeeley.com/opengraph.jpg",
+        url: "https://timfeeley.com/opengraph.png",
         width: 1920,
         height: 1080,
       },
@@ -86,19 +95,104 @@ function SocialIcons() {
   ]
 
   return (
-    <section className='inline-flex space-x-6 text-slate-600'>
+    <section className="inline-flex space-x-6 text-slate-400">
       {ICONS.map(({ name, href, svg: Svg }) => (
-        <a key={name} href={href} rel='noopener noreferrer' target='_blank'>
-          <Svg width='18' height='18' />
+        <a key={name} href={href} rel="noopener noreferrer" target="_blank">
+          <Svg width="18" height="18" />
         </a>
       ))}
       <a
-        className='text-xs text-slate-800 underline'
-        rel='noopener noreferrer'
-        target='_blank'
-        href='https://github.com/timfee/www'>
+        className="text-xs text-slate-800 underline"
+        rel="noopener noreferrer"
+        target="_blank"
+        href="https://github.com/timfee/www">
         view source
       </a>
     </section>
   )
 }
+
+const Sans = localFont({
+  display: "swap",
+  preload: true,
+  variable: "--font-sans",
+  src: [
+    {
+      path: "../public/fonts/sans-regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/sans-regular-italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/sans-medium.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/sans-medium-italic.woff2",
+      weight: "500",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/sans-semibold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/sans-semibold-italic.woff2",
+      weight: "600",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/sans-bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/sans-bold-italic.woff2",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/sans-black.woff2",
+      weight: "800",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/sans-black-italic.woff2",
+      weight: "800",
+      style: "italic",
+    },
+  ],
+})
+const Serif = localFont({
+  display: "swap",
+  preload: true,
+  variable: "--font-serif",
+  src: [
+    {
+      path: "../public/fonts/serif-regular.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/serif-regular-italic.woff2",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../public/fonts/serif-bold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../public/fonts/serif-bold-italic.woff2",
+      weight: "600",
+      style: "italic",
+    },
+  ],
+})

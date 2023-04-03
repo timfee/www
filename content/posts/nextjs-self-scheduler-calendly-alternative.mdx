@@ -1,0 +1,556 @@
+---
+title: Build and host your own Calendy-like scheduling page using Next.js and Google APIs
+date: 2023-03-28
+---
+
+<div className="bg-blue-100 px-12 py-2 font-sans">
+  I originally wrote this on Dev.to, but it seems fitting that it should live on
+  my site, as well. 😉
+</div>
+
+I’m Tim, currently an out-of-work Product Manager. Gotta love 2023. I’ve worked at companies like Google, Meta and Tripadvisor (as a PM), but have always enjoyed hobbyist coding.
+
+For some weird reason, I’ve been interested in a personal self-scheduling solution (like Calendly, Cal.com), but one that's simple, free, and without branding or bloat.
+
+**So, I made my own Calendly alternative, and wanted to share with the world and walk through it.**
+
+<Image
+  src="/images/next-js-personal-calendaring/overview.png"
+  width="993"
+  height="1089"
+  alt="The main page of the personal calendaring app"
+/>
+
+The current solution is intentionally lightweight and opinionated, but hopefully flexible enough should you want to extend it.
+
+The site has the following bits of functionality:
+
+1. **It displays a calendar of your available dates for meetings.** By default,
+   I’ve configured it to show 14 days of availability. This isn't your usual
+   calendar; it's not designed for long-range bookings out of the box. It lists
+   all dates inline without pagination by month, keeping things simple.
+2. **It supports meetings by phone or Google Meet.** If Meet is selected,
+   conference details will be added automatically.
+3. **It allows you to review and approve requests** before they’re added to your
+   As I mentioned, it's opinionated and designed for simple use cases for individuals in mind. 😁
+
+Some technical notes:
+
+- Uses Next.js 13 and Typescript with Tailwind.
+- Has (some) testing on the more trickier functions.
+- Uses minimal libraries. For instance, I built my own lightweight wrapper to hit Google APIs directly to avoid importing `googleapis`.
+- Probably has some over-engineered bits that feel nice, like `lru-cache` limiting on API endpoints, a more intuitive timezone selection piece, and formatted emails.
+
+# Getting started
+
+## Clone the repo
+
+Clone my [repository](https://github.com/timfee/meet.git) to get started.
+
+```bash
+git clone https://github.com/timfee/meet.git
+```
+
+Don't forget to `npm install`
+
+## Set up Google API
+
+You can skip this section if you already have (or know how to get) an Oauth Client with scopes `https://mail.google.com/` and `https://www.googleapis.com/auth/calendar` and a redirect URI of `https://developers.google.com/oauthplayground/`
+
+<iframe
+  width="100%"
+  height="300"
+  src="https://www.youtube.com/embed/w-cprpHTONA"
+  title="Creating a new Oauth Project"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen></iframe>
+
+1. Visit https://console.cloud.google.com/projectcreate and create a new project. Don't sweat the name, nobody will see it but you.
+2. Once your project is created, head to **APIs & Services** ▶ **[Library](https://console.cloud.google.com/apis/library)** and search for [Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com) and [Google Calendar API](https://console.cloud.google.com/apis/library/calendar-json.googleapis.com). Click Enable.
+3. Then go to **APIs & Services** ▶ **[OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)**. If you have a Workspace account, choose **Internal**. If you're using a Gmail/personal account, you’ll have to choose **External**.
+4. Enter an App Name (you can just use `Meet Me` - nobody but you will see this). Choose a user support email from the dropdown (nobody but you will see it), and input your email address once more at the bottom under _Developer Contact Information_. Save and continue.
+5. Don’t worry about entering anything on the next screen when it asks you for scopes, just click Save and Continue.
+6. If you chose **External** in step 3, add your own account as a test user. Save and continue.
+7. That should do it. Now head to **APIs & Services** ▶ **[Credentials](https://console.cloud.google.com/apis/credentials)**. and click **Create Credentials**; pick **OAuth Client ID** from the list.
+8. Pick **Web application** from "Application Type" and don't worry about the name.
+9. Add `https://developers.google.com/oauthplayground/` to **Authorized Redirect URIs** (you'll see why in a bit).
+10. Click **Create** and take a note of the Client ID and Client Secret. You'll need them.
+
+What we just did was create an OAuth client, which will allow us to programmatically access your calendar and email.
+
+We're going to use Google's OAuth Playground as a way to store a refresh token that will allow us to access your calendar and email indefinitely.
+
+## Get your refresh token
+
+You can skip this section if you’re able to obtain a `refresh_token` of your own. If you have an OAuth Client ID already but need to get a refresh token, you’ll need to go to your existing credential and add `https://developers.google.com/oauthplayground/` as a redirect URL.
+
+<iframe
+  width="100%"
+  height="300"
+  src="https://www.youtube.com/embed/GWsuQbhPJLY"
+  title="Getting your refresh token"
+  frameBorder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowFullScreen></iframe>
+
+1. Visit https://developers.google.com/oauthplayground/
+2. Press the gear on the right, and check the box to "Use your own OAuth credentials" -- paste your Client ID and Secret from Step 9.
+3. Now scroll through the list on the left and click the triangle next to `Gmail API v1` and click `https://mail.google.com/` so it gets a check. Then scroll to `Google Calendar API v3` and click `https://www.googleapis.com/auth/calendar` to check it.
+4. Click Authorize APIs.
+5. Follow the prompts. If you made this an **External** project, you might get a scary looking screen saying Google hasn't reviewed your app yet. Don't worry about it; hit the Continue button (on the left!).
+6. You'll be taken back to the screen you were just on with an **Authorization code** populated in the text box. Click the **Exchange authorization code for tokens** button.
+7. When the screen changes to "Step 3", click on "Step 2" to take you back to the text box with your refresh token. Copy it.
+
+At this point you should have your:
+
+- OAuth Client ID
+- OAuth Secret
+- Refresh Token
+
+You need to be **VERY** careful with these values. Don't commit them to Github directly, or send them to anyone. This allows programmatic access to read and write email and calendar events.
+
+Because we're using `nodemailer` to send emails using `XOAUTH2`, we need the entire Gmail scope. In a future version, I’ll work to reduce the privileges needed.
+
+## Configure `.env.local`
+
+Open up the code in your favorite editor, and open the .env.template.local file.
+
+- `GOOGLE_OAUTH_CLIENT_ID`: Your Client ID from earlier
+- `GOOGLE_OAUTH_SECRET`: Your Client Secret from earlier.
+- `GOOGLE_OAUTH_REFRESH`: Your refresh token
+
+I’ve also chosen to store sensitive-ish values in this file, so fill your email address (must match your Gmail address), your name, and your phone number (if you want).
+
+Rename this file to `.env.local`. If you’re using Vercel, make sure to upload these to your environment variables.
+
+I’ve made sure that the `.gitignore` file in my repo ignores `.env.local` but always give a double check to your commits to make sure you don’t accidentally commit your secrets.
+
+**If you accidentally share these secrets, you should:**
+
+1. **Immediately revoke token access.** Visit https://myaccount.google.com/permissions and look for the name of your app. then click "Remove Access"
+
+2. **Generate a new Web Client Secret.** Go to https://console.cloud.google.com/apis/credentials and click click the pencil icon next to your Web Client. On the next screen, click "Add Secret" to add a new secret. Then trash the old one.
+
+## Configure `./config.ts`
+
+1. Set the allowed meeting durations by creating an array of integers representing the number of minutes for each duration. For example, to allow 15, 30, and 60-minute meetings:
+
+```ts
+export const ALLOWED_DURATIONS = [15, 30, 60]\
+```
+
+2. Define the default meeting duration, which will be used if no other duration is specified. In this case, we set it to 30 minutes:
+
+```ts
+export const DEFAULT_DURATION = 30
+```
+
+3. Specify the calendar(s) to check for availability by creating an array of calendar identifiers. In this case, we only check the "primary" calendar, which is Google’s default:
+
+```ts
+export const CALENDARS_TO_CHECK = ["primary"]
+```
+
+4. Set the padding between available slots by specifying the number of minutes as SLOT_PADDING. In essence, this will show the specified number of minutes before and after each appointment in your calendar as "booked" so you’re not back-to-back. By default, it’s 0:
+
+```ts
+export const SLOT_PADDING = 0
+```
+
+5. Set your IANA timezone string that you work out of (or more specifically, that your availability, below, will be defined in). By default, it’s mine :)
+
+```ts
+export const OWNER_TIMEZONE = "America/Los_Angeles"
+```
+
+6. Specify the times you’d like to take meetings each week by setting `OWNER_AVAILABILITY`. The object accepts a day of the week as a key (0 = Sunday, 6 = Saturday), and for each key, accepts an array of intervals, which contain start and end times as hours.
+
+To illustrate the point a little better, the default values are set up to allow appointments from 9AM - 5PM, Monday-Friday, in the timezone if `OWNER_TIMEZONE`:
+
+```ts
+const DEFAULT_WORKDAY = [
+  {
+    start: {
+      hour: 9,
+    },
+    end: {
+      hour: 17,
+    },
+  },
+]
+
+export const OWNER_AVAILABILITY: AvailabilitySlotsMap = {
+  1: DEFAULT_WORKDAY,
+  2: DEFAULT_WORKDAY,
+  3: DEFAULT_WORKDAY,
+  4: DEFAULT_WORKDAY,
+  5: DEFAULT_WORKDAY,
+}
+```
+
+You can also tweak options for formatting local dates and times, but the defaults should be fine and flexible enough.
+
+Now, let's dig into the code!
+
+# Key components
+
+Before diving into the actual flow, let’s go over some of the basic building
+blocks that do the heavy lifting:
+
+## <code>lib/availability</code> functions
+
+This is where the actual work of determining your availability takes place. The
+main functions here are:
+
+### getAccessToken.ts
+
+This uses your refresh token to obtain an `access_token` that we can use for
+`Bearer` authorization when communicating with Google’s APIs.
+
+```ts
+const params = new URLSearchParams({
+  grant_type: "refresh_token",
+  client_secret: process.env.GOOGLE_OAUTH_SECRET,
+  refresh_token: process.env.GOOGLE_OAUTH_REFRESH,
+  client_id: process.env.GOOGLE_OAUTH_CLIENT_ID,
+})
+
+const response = await fetch("https://oauth2.googleapis.com/token", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/x-www-form-urlencoded",
+  },
+  body: params.toString(),
+  cache: "no-cache",
+})
+```
+
+The response will include an access_token if successful, which we’d ideally
+cache for use across all sessions (since it’s valid for 1 hour). However, I’m
+assuming that my limited popularity means infrequent site visits won’t send too
+many API requests.
+
+I opted to write this myself instead of using `googleapis`, which is a much
+heavier library.
+
+### getPotentialTimes.ts
+
+This function generates an array of DateTimeInterval objects representing
+potential time slots available for booking.
+
+```ts
+function getPotentialTimes({
+  start,
+  end,
+  duration,
+  availabilitySlots,
+}: {
+  start: Day
+  end: Day
+  duration: number
+  availabilitySlots: AvailabilitySlotsMap
+}): DateTimeInterval[]
+```
+
+We use the `OWNER_AVAILABILITY` constant in `./config.ts` to define when you’d
+theoretically accept appointments when you’re not busy and generate
+`duration`-sized slots from the `start` Day to `end` Day.
+
+### getBusyTimes.ts
+
+We use the `freeBusy` service of Google Calendar to get intervals where you’re
+busy. This doesn’t expose any information about the appointments themselves, so
+it’s a handy way to get the times we need to block from being booked.
+
+```ts
+async function getBusyTimes({ start, end }: DateTimeInterval)
+```
+
+We pass it a starting `Date` and ending `Date`. We use the `CALENDARS_TO_CHECK`
+array in `config.ts` to specify the calendars we should consider when blocking
+time. (By default, we use `primary`.)
+
+We’ll get back a single array of intervals that will be removed from the
+potential slots returned by `getPotentialTimes`.
+
+### getAvailability.ts
+
+This function reconciles the potential time slots with periods marked as busy.
+If `padding` is specified, each busy period will be buffered by that number of
+minutes, helping you avoid back-to-back meetings.
+
+```tsx
+export default function getAvailability({
+  potential: potentialParam,
+  busy,
+  padding = SLOT_PADDING,
+}: {
+  potential?: DateTimeInterval[]
+  busy?: DateTimeInterval[]
+  padding?: number
+}): DateTimeInterval[]
+```
+
+The end result is an array of slots that (a) fall within your daily schedule
+configuration, and (b) aren’t booked.
+
+### createAppointment.ts
+
+When we’re ready to actually add the appointment that a user requests to your
+calendar, this function handles it.
+
+```ts
+async function createCalendarAppointment(props: AppointmentProps)
+```
+
+This function constructs and executes an API request to Google Calendar that
+invites the recipient and provides instructions based on whether the meeting is
+a `phone` call or a Google `meet` meeting.
+
+## Context
+
+We’ll use `useReducer()` to handle the application’s state, which consists of:
+
+```ts
+ StateType = {
+  /** The earliest day we’ll offer appointments */
+  start: Day
+  /** The latest day we’ll offer appointments */
+  end: Day
+  /** The day the user selected (if made) */
+  selectedDate?: Day
+  /** The end user’s timezone string */
+  timeZone: string
+  /** The number of minutes being requested,
+   *  must be one of the values in ALLOWED_DURATIONS
+   */
+  duration: number
+  /** Whether the booking modal is open or busy. */
+  modal: ModalStatus
+  /** The time slot the user selected (if made). */
+  selectedTime?: DateTimeInterval
+}
+```
+
+In addition to your typical state functionality, this also handles a few pieces
+of “magic”:
+
+- When the state is updated, we push key parts of it to `searchParams`, (e.g.
+  `?duration=XX&timeZone=YY&selectedDate=ZZ`).
+- The initial state will use the browser’s resolved timezone if none is
+  provided.
+- The initial state leaves `selectedDate` undefined if it’s not passed,
+  signaling to our page rendering code that we want to set the `selectedDate` to
+  the first day with nonzero available slots.
+
+# The main page (`pages/index.tsx`)
+
+We use `getServerSideProps` to handle querying Google Calendar’s API.
+
+**This is where the two weeks of availability is set,** you can change the
+starting day or ending day to suit your needs. For example, you might not want
+to accept same day appointments (add an offset of `1` to `start`), or may only
+offer slots for one week (change the offset of `end` to `7`.)
+
+**This also helps reconstitute the State from the query parameters.** We use
+`zod` to do some basic validation for passed `duration`, `timeZone` and
+`selectedDate`.
+
+We pass these props to the page, along with the `busy` times returned from
+Google.
+
+```ts
+export async function getServerSideProps({ query }: GetServerSidePropsContext) {
+  // ....
+
+  return {
+    props: {
+      start: start.toString(),
+      end: end.toString(),
+      busy: mapDatesToStrings(busy),
+      duration,
+      ...(timeZone && { timeZone }),
+      ...(selectedDate && { selectedDate }),
+    },
+  }
+}
+```
+
+We leave `timeZone` and `selectedDate` out of the response.
+
+- We don’t want to use the server’s `timeZone`, since it might differ from the
+  user’s.
+- We don’t want to propose an initially `selectedDate` yet, either.
+
+You’ll notice that the default `Page` component is wrapped with our provider:
+
+```ts
+export default withProvider(Page)
+```
+
+This will allow us, in `AvailabilityContext.tsx`, to parse the params we resolve
+into the State.
+
+In our page’s render function, we use the `duration` and `timeZone` from the
+state—as well as your configured `start` and `end` days—to build out the
+calendar.
+
+```tsx
+const potential = getPotentialTimes({
+  start: startDay,
+  end: endDay,
+  duration,
+  availabilitySlots: OWNER_AVAILABILITY,
+})
+
+const offers = getAvailability({
+  busy: mapStringsToDates(busy),
+  potential,
+})
+```
+
+This allows us to change the UI to adapt to different durations as the user
+changes them in the session:
+
+<Image
+  src="/images/next-js-personal-calendaring/durations.png"
+  width="993"
+  height="577"
+  alt="Changing durations before and after"
+/>
+
+# The availability components
+
+In `./components/availability`, we have the main `AvailabilityPicker.tsx`
+component, that brings together:
+
+- user input controls for timezone and duration
+- date selection controls
+- time selection controls
+
+The picker itself also takes the array of availability times returned from
+`getAvailability` and turns them into a map, keyed by the date of the week.
+
+This handles cases where timezone difference causes the end-user’s availability
+offerings to be on a different day than your local timezone:
+
+<Image
+  src="/images/next-js-personal-calendaring/timezones.png"
+  width="993"
+  height="577"
+  alt="Changing timezones before and after"
+/>
+
+While we’re creating this map, we also will keep track of the **maximum number
+of available slots in any one day**, which allows us to show a visual
+availability summary (more on that later.)
+
+## Timezone and Duration input controls
+
+We consume state and dispatch updates in these components directly.
+
+- Duration is pretty straightforward.
+- Timezone has a little bit of over-engineering 😉.
+
+To avoid showing end-users a huge list of IANA timezone strings, it uses
+[`@vvo/tzdb`](https://github.com/vvo/tzdb) and only shows unique display
+strings.
+
+In cases where the passed timeZone isn’t the canonical timeZone for an area
+(e.g. `America/Kentucky/Louisville` isn’t represented; but it’s the same as
+`America/New_York`), we make sure the right timezone is shown as selected in the
+dropdown.
+
+## Calendar
+
+This is my opinionated take on a calendar, with the assumption that you don’t
+want to schedule months out in advance:
+
+`Calendar.tsx` will generate days from `start` to `end`. It will show greyed out
+and disabled days _before_ `start` and _after_ `end` so every row of weeks is
+complete (starts Sunday, and ends Saturday).
+
+This won’t work for every single international context, so you may need to tweak
+it a bit if your weeks don’t start on Sunday and end on Saturday.
+
+`DayButton.tsx` is used to render the dates and handles dispatching events to
+update the `selectedDate` state and show times that correspond to the date
+selected.
+
+Additionally:
+
+- The current date will be marked as **TODAY**
+- Any date with no availability will be disabled
+- Dates with availability will have 1 - 3 dots underneath that indicates how
+  much availability the current day has relative to maximum availability across
+  all days considered.
+- Padded dates outside of the range will never get an availability dot.
+
+# Times
+
+This functionality is a little more straightforward; we simply iterate over the
+times that are within the range of the selected date (in the requested
+timezone).
+
+`TimeButton.tsx` renders a button that will dispatch an update to `selectedSlot`
+and open the booking modal.
+
+# The booking form
+
+`./components/booking/BookingForm.tsx` uses `Modal.tsx` to render itself,
+presenting the user with a human-readable version of the time slot they selected
+in their local timezone.
+
+There’s an array of `locations` that will render as option buttons to let the
+user choose how they’d like to meet. Right now, it’s just `meet` and `phone`.
+More on how those are used later.
+
+We do only simple client-side validation here to make sure the email address is
+valid and name is provided.
+
+We `POST` the result to `./pages/api/request` and redirect the user to
+`./pages/confirmation.tsx` once we get a successful response.
+
+## The `request` endpoint
+
+`./pages/api/request` will take the `name`, `email`, `location`, `start`, `end`,
+`duration` and `timeZone` and use it to construct an email to `OWNER_EMAIL` from
+your `.env` file.
+
+This email (which is rendered using `./lib/email/messages/Approval.ts`) will
+give you the options to accept the meeting or decline the meeting.
+
+Another email is sent to the user’s provided `email`, letting them know you’ll
+get back to them. This email is rendered using
+`./lib/email/messages/Confirmation.ts`.
+
+The URL to actually book the appointment gets constructed as
+`/api/confirm?data={params}&key={hash}`, where `data` is the serialized
+appointment information, and `key` is a `sha256` hash of the data, salted with
+your `GOOGLE_OAUTH_SECRET`.
+
+Also, I’ve added some `lru-cache` rate limiting. You might want to tweak this
+(or maybe add captcha protection, etc.) if you’re getting spam.
+
+## The `confirm` endpoint
+
+This confirms (accepts) the meeting.
+
+It validates that the `data` and `hash` match, and then uses the
+`createAppointment` helper function to issue the API request that will create
+the appointment and notify the recipient.
+
+This helper function handles conditionally rendering instructions that include
+adding your `OWNER_PHONE_NUMBER` (from the `.env` file) as instructions for
+`phone` requests, or instructing Google to add `meet` conference details if
+requested.
+
+Once you confirm the appointment, you’ll be taken to
+`./pages/booked?url={event_id}` which will let you click into the actual Google
+Calendar permalink URL for the event that was just created.
+
+# Wrapup
+
+Phew! That was a lot. This was a fun little project. There’s definitely more
+work to do, and I welcome any contributions!

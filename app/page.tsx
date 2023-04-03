@@ -1,42 +1,26 @@
-import type { Metadata } from "next"
+import { notFound } from "next/navigation"
+import { Metadata } from "next"
+import { allPages } from "contentlayer/generated"
 
-import AnimatedText from "@/components/AnimatedText"
-import Container from "@/components/Container"
-import Headshot from "@/components/Headshot"
-import colors from "@/tailwind.colors"
-import { toRgb } from "@/utils/colors"
+import Content from "@/components/content"
 
-export const revalidate = 0
+export function generateMetadata(): Metadata {
+  const page = allPages.find((page) => page.url === "/")
+  return { title: page?.title }
+}
 
-export default async function Home() {
-  // generatePdf()
+const PageLayout = () => {
+  const page = allPages.find((page) => page.url === "/")
+
+  if (!page) {
+    return notFound()
+  }
 
   return (
-    <>
-      <Headshot
-        className='absolute inset-x-0 top-0 z-10 mx-auto mt-24 inline-block w-fit'
-        width={300}
-      />
-      <Container
-        as='main'
-        className='mt-72 rounded-3xl bg-white'
-        style={{
-          boxShadow: `15px 15px 30px ${toRgb(
-            colors.schist[100],
-            0.6
-          )}, -15px -15px 30px ${toRgb(colors.yuma[100], 0.3)}`,
-        }}>
-        <div className='prose prose-homehero px-10 pb-6 pt-20 font-serif sm:px-[5rem]'>
-          <AnimatedText />
-        </div>
-      </Container>
-    </>
+    <section className="prose mx-auto mt-12 max-w-2xl px-4">
+      <Content animated>{page.body.code}</Content>
+    </section>
   )
 }
 
-export const metadata: Metadata = {
-  title: "Tim Feeley — Product manager. Friend.",
-  openGraph: {
-    title: "Tim Feeley — Product manager. Friend.",
-  },
-}
+export default PageLayout
