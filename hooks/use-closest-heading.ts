@@ -40,7 +40,6 @@ export default function useClosestHeading({
   }, [articleRef])
 
   return useMemo(() => {
-    console.log(closestHeading)
     return closestHeading
   }, [closestHeading])
 }

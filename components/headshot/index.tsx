@@ -1,6 +1,7 @@
 import Image from "next/image"
 import type { HTMLProps } from "react"
 
+import Link from "next/link"
 import source from "./image.png"
 
 export default function Headshot({
@@ -22,7 +23,7 @@ export default function Headshot({
   }
 
   return (
-    <figure className={className} style={{ width, height }}>
+    <Link href="/" className={className} style={{ width, height }}>
       <Image
         priority
         height={height}
@@ -30,6 +31,6 @@ export default function Headshot({
         src={source}
         alt="Tim Feeley"
       />
-    </figure>
+    </Link>
   )
 }
