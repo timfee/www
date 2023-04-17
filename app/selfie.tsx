@@ -1,15 +1,13 @@
 import Image from "next/image"
 import type { HTMLProps } from "react"
 
-import Link from "next/link"
-import source from "./image.png"
+import source from "./selfie.png"
 
-export default function Headshot({
+export default function Selfie({
   height: _height,
   width: _width,
-  className,
 }: HTMLProps<HTMLImageElement>) {
-  const ASPECT_RATIO = 640 / 647
+  const ASPECT_RATIO = 612 / 760
 
   let height = _height ? Number.parseInt(_height.toString()) : undefined
   let width = _width ? Number.parseInt(_width.toString()) : undefined
@@ -19,18 +17,16 @@ export default function Headshot({
   } else if (width) {
     height = Math.round(width / ASPECT_RATIO)
   } else {
-    throw new Error("Headshot must have either a height or width")
+    throw new Error("<Selfie /> must have either a height or width")
   }
 
   return (
-    <Link href="/" className={className} style={{ width, height }}>
-      <Image
-        priority
-        height={height}
-        width={width}
-        src={source}
-        alt="Tim Feeley"
-      />
-    </Link>
+    <Image
+      priority
+      height={height}
+      width={width}
+      src={source}
+      alt="Tim Feeley"
+    />
   )
 }

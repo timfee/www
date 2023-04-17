@@ -1,33 +1,28 @@
 import { notFound } from "next/navigation"
-import Content from "@/components/content"
-import { allPages } from "contentlayer/generated"
+import Link from "next/link"
+import { allPages } from "@/.contentlayer/generated"
+import Mdx from "@/app/mdx-wrapper"
 
-export const generateStaticParams = async () =>
-  allPages.map((page) => ({
-    slug: page._raw.flattenedPath.slice(`/pages`.length),
-  }))
-
-export const generateMetadata = ({ params }: { params: { page: string } }) => {
+export function generateMetadata({ params }: { params: { page: string } }) {
   const page = allPages.find(
-    (page) => page._raw.flattenedPath === `pages/${params.page}`
+    (page) => page.url.slice("/".length) === params.page
   )
-  return { title: page?.title }
+  if (!page) {
+    return {}
+  }
+
+  return {
+    title: page.title,
+  }
 }
-
-const PageLayout = ({ params }: { params: { page: string } }) => {
+export default function Page({ params }: { params: { page: string } }) {
   const page = allPages.find(
-    (page) => page._raw.flattenedPath === `pages/${params.page}`
+    (page) => page.url.slice("/".length) === params.page
   )
-
   if (!page) {
     return notFound()
   }
+  const { code } = page.body
 
-  return (
-    <article className="prose mx-auto mt-12 max-w-2xl px-4">
-      <Content animated>{page.body.code}</Content>
-    </article>
-  )
+  return <Mdx>{code}</Mdx>
 }
-
-export default PageLayout

@@ -34,7 +34,7 @@
   },
   "rules": {
     "import/order": "error",
-    "tailwindcss/migration-from-tailwind-2": "off",
+    "tailwindcss/classnames-order": "error",
     "unicorn/prevent-abbreviations": [
       "error",
       {

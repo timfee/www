@@ -1,4 +1,12 @@
 {
   "bracketSameLine": true,
+  "overrides": [
+    {
+      "files": "*.mdx",
+      "options": {
+        "proseWrap": "always"
+      }
+    }
+  ],
   "semi": false
 }

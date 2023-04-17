@@ -1,18 +1,22 @@
 ---
-title: Build and host your own Calendy-like scheduling page using Next.js and Google APIs
+title: Build and host your own scheduling page using Next.js and Google APIs
 date: 2023-03-28
+excerpt: For some weird reason, I’ve been interested in a personal
+  self-scheduling solution like Calendly, but one that’s simple, free, and
+  without branding or bloat.
+
+  So, I made my own Calendly alternative, and wanted to share with the world and
+  walk through it!
 ---
 
-<div className="bg-blue-100 px-12 py-2 font-sans">
-  I originally wrote this on Dev.to, but it seems fitting that it should live on
-  my site, as well. 😉
-</div>
+# Build and host your own scheduling page using Next.js and Google APIs
 
-I’m Tim, currently an out-of-work Product Manager. Gotta love 2023. I’ve worked at companies like Google, Meta and Tripadvisor (as a PM), but have always enjoyed hobbyist coding.
+For some weird reason, I’ve been interested in a personal self-scheduling
+solution (like Calendly, Cal.com), but one that's simple, free, and without
+branding or bloat.
 
-For some weird reason, I’ve been interested in a personal self-scheduling solution (like Calendly, Cal.com), but one that's simple, free, and without branding or bloat.
-
-**So, I made my own Calendly alternative, and wanted to share with the world and walk through it.**
+So, I made my own Calendly alternative, and wanted to share with the world and
+walk through it.
 
 <Image
   src="/images/next-js-personal-calendaring/overview.png"
@@ -21,7 +25,8 @@ For some weird reason, I’ve been interested in a personal self-scheduling solu
   alt="The main page of the personal calendaring app"
 />
 
-The current solution is intentionally lightweight and opinionated, but hopefully flexible enough should you want to extend it.
+The current solution is intentionally lightweight and opinionated, but hopefully
+flexible enough should you want to extend it.
 
 The site has the following bits of functionality:
 
@@ -32,14 +37,18 @@ The site has the following bits of functionality:
 2. **It supports meetings by phone or Google Meet.** If Meet is selected,
    conference details will be added automatically.
 3. **It allows you to review and approve requests** before they’re added to your
-   As I mentioned, it's opinionated and designed for simple use cases for individuals in mind. 😁
+   As I mentioned, it's opinionated and designed for simple use cases for
+   individuals in mind. 😁
 
 Some technical notes:
 
 - Uses Next.js 13 and Typescript with Tailwind.
 - Has (some) testing on the more trickier functions.
-- Uses minimal libraries. For instance, I built my own lightweight wrapper to hit Google APIs directly to avoid importing `googleapis`.
-- Probably has some over-engineered bits that feel nice, like `lru-cache` limiting on API endpoints, a more intuitive timezone selection piece, and formatted emails.
+- Uses minimal libraries. For instance, I built my own lightweight wrapper to
+  hit Google APIs directly to avoid importing `googleapis`.
+- Probably has some over-engineered bits that feel nice, like `lru-cache`
+  limiting on API endpoints, a more intuitive timezone selection piece, and
+  formatted emails.
 
 # Getting started
 
@@ -55,7 +64,10 @@ Don't forget to `npm install`
 
 ## Set up Google API
 
-You can skip this section if you already have (or know how to get) an Oauth Client with scopes `https://mail.google.com/` and `https://www.googleapis.com/auth/calendar` and a redirect URI of `https://developers.google.com/oauthplayground/`
+You can skip this section if you already have (or know how to get) an Oauth
+Client with scopes `https://mail.google.com/` and
+`https://www.googleapis.com/auth/calendar` and a redirect URI of
+`https://developers.google.com/oauthplayground/`
 
 <iframe
   width="100%"
@@ -66,24 +78,48 @@ You can skip this section if you already have (or know how to get) an Oauth Clie
   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
   allowFullScreen></iframe>
 
-1. Visit https://console.cloud.google.com/projectcreate and create a new project. Don't sweat the name, nobody will see it but you.
-2. Once your project is created, head to **APIs & Services** ▶ **[Library](https://console.cloud.google.com/apis/library)** and search for [Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com) and [Google Calendar API](https://console.cloud.google.com/apis/library/calendar-json.googleapis.com). Click Enable.
-3. Then go to **APIs & Services** ▶ **[OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)**. If you have a Workspace account, choose **Internal**. If you're using a Gmail/personal account, you’ll have to choose **External**.
-4. Enter an App Name (you can just use `Meet Me` - nobody but you will see this). Choose a user support email from the dropdown (nobody but you will see it), and input your email address once more at the bottom under _Developer Contact Information_. Save and continue.
-5. Don’t worry about entering anything on the next screen when it asks you for scopes, just click Save and Continue.
-6. If you chose **External** in step 3, add your own account as a test user. Save and continue.
-7. That should do it. Now head to **APIs & Services** ▶ **[Credentials](https://console.cloud.google.com/apis/credentials)**. and click **Create Credentials**; pick **OAuth Client ID** from the list.
-8. Pick **Web application** from "Application Type" and don't worry about the name.
-9. Add `https://developers.google.com/oauthplayground/` to **Authorized Redirect URIs** (you'll see why in a bit).
-10. Click **Create** and take a note of the Client ID and Client Secret. You'll need them.
+1. Visit https://console.cloud.google.com/projectcreate and create a new
+   project. Don't sweat the name, nobody will see it but you.
+2. Once your project is created, head to **APIs & Services** ▶
+   **[Library](https://console.cloud.google.com/apis/library)** and search for
+   [Gmail API](https://console.cloud.google.com/apis/library/gmail.googleapis.com)
+   and
+   [Google Calendar API](https://console.cloud.google.com/apis/library/calendar-json.googleapis.com).
+   Click Enable.
+3. Then go to **APIs & Services** ▶
+   **[OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent)**.
+   If you have a Workspace account, choose **Internal**. If you're using a
+   Gmail/personal account, you’ll have to choose **External**.
+4. Enter an App Name (you can just use `Meet Me` - nobody but you will see
+   this). Choose a user support email from the dropdown (nobody but you will see
+   it), and input your email address once more at the bottom under _Developer
+   Contact Information_. Save and continue.
+5. Don’t worry about entering anything on the next screen when it asks you for
+   scopes, just click Save and Continue.
+6. If you chose **External** in step 3, add your own account as a test user.
+   Save and continue.
+7. That should do it. Now head to **APIs & Services** ▶
+   **[Credentials](https://console.cloud.google.com/apis/credentials)**. and
+   click **Create Credentials**; pick **OAuth Client ID** from the list.
+8. Pick **Web application** from "Application Type" and don't worry about the
+   name.
+9. Add `https://developers.google.com/oauthplayground/` to **Authorized Redirect
+   URIs** (you'll see why in a bit).
+10. Click **Create** and take a note of the Client ID and Client Secret. You'll
+    need them.
 
-What we just did was create an OAuth client, which will allow us to programmatically access your calendar and email.
+What we just did was create an OAuth client, which will allow us to
+programmatically access your calendar and email.
 
-We're going to use Google's OAuth Playground as a way to store a refresh token that will allow us to access your calendar and email indefinitely.
+We're going to use Google's OAuth Playground as a way to store a refresh token
+that will allow us to access your calendar and email indefinitely.
 
 ## Get your refresh token
 
-You can skip this section if you’re able to obtain a `refresh_token` of your own. If you have an OAuth Client ID already but need to get a refresh token, you’ll need to go to your existing credential and add `https://developers.google.com/oauthplayground/` as a redirect URL.
+You can skip this section if you’re able to obtain a `refresh_token` of your
+own. If you have an OAuth Client ID already but need to get a refresh token,
+you’ll need to go to your existing credential and add
+`https://developers.google.com/oauthplayground/` as a redirect URL.
 
 <iframe
   width="100%"
@@ -95,12 +131,21 @@ You can skip this section if you’re able to obtain a `refresh_token` of your o
   allowFullScreen></iframe>
 
 1. Visit https://developers.google.com/oauthplayground/
-2. Press the gear on the right, and check the box to "Use your own OAuth credentials" -- paste your Client ID and Secret from Step 9.
-3. Now scroll through the list on the left and click the triangle next to `Gmail API v1` and click `https://mail.google.com/` so it gets a check. Then scroll to `Google Calendar API v3` and click `https://www.googleapis.com/auth/calendar` to check it.
+2. Press the gear on the right, and check the box to "Use your own OAuth
+   credentials" -- paste your Client ID and Secret from Step 9.
+3. Now scroll through the list on the left and click the triangle next to
+   `Gmail API v1` and click `https://mail.google.com/` so it gets a check. Then
+   scroll to `Google Calendar API v3` and click
+   `https://www.googleapis.com/auth/calendar` to check it.
 4. Click Authorize APIs.
-5. Follow the prompts. If you made this an **External** project, you might get a scary looking screen saying Google hasn't reviewed your app yet. Don't worry about it; hit the Continue button (on the left!).
-6. You'll be taken back to the screen you were just on with an **Authorization code** populated in the text box. Click the **Exchange authorization code for tokens** button.
-7. When the screen changes to "Step 3", click on "Step 2" to take you back to the text box with your refresh token. Copy it.
+5. Follow the prompts. If you made this an **External** project, you might get a
+   scary looking screen saying Google hasn't reviewed your app yet. Don't worry
+   about it; hit the Continue button (on the left!).
+6. You'll be taken back to the screen you were just on with an **Authorization
+   code** populated in the text box. Click the **Exchange authorization code for
+   tokens** button.
+7. When the screen changes to "Step 3", click on "Step 2" to take you back to
+   the text box with your refresh token. Copy it.
 
 At this point you should have your:
 
@@ -108,9 +153,13 @@ At this point you should have your:
 - OAuth Secret
 - Refresh Token
 
-You need to be **VERY** careful with these values. Don't commit them to Github directly, or send them to anyone. This allows programmatic access to read and write email and calendar events.
+You need to be **VERY** careful with these values. Don't commit them to Github
+directly, or send them to anyone. This allows programmatic access to read and
+write email and calendar events.
 
-Because we're using `nodemailer` to send emails using `XOAUTH2`, we need the entire Gmail scope. In a future version, I’ll work to reduce the privileges needed.
+Because we're using `nodemailer` to send emails using `XOAUTH2`, we need the
+entire Gmail scope. In a future version, I’ll work to reduce the privileges
+needed.
 
 ## Configure `.env.local`
 
@@ -120,53 +169,76 @@ Open up the code in your favorite editor, and open the .env.template.local file.
 - `GOOGLE_OAUTH_SECRET`: Your Client Secret from earlier.
 - `GOOGLE_OAUTH_REFRESH`: Your refresh token
 
-I’ve also chosen to store sensitive-ish values in this file, so fill your email address (must match your Gmail address), your name, and your phone number (if you want).
+I’ve also chosen to store sensitive-ish values in this file, so fill your email
+address (must match your Gmail address), your name, and your phone number (if
+you want).
 
-Rename this file to `.env.local`. If you’re using Vercel, make sure to upload these to your environment variables.
+Rename this file to `.env.local`. If you’re using Vercel, make sure to upload
+these to your environment variables.
 
-I’ve made sure that the `.gitignore` file in my repo ignores `.env.local` but always give a double check to your commits to make sure you don’t accidentally commit your secrets.
+I’ve made sure that the `.gitignore` file in my repo ignores `.env.local` but
+always give a double check to your commits to make sure you don’t accidentally
+commit your secrets.
 
 **If you accidentally share these secrets, you should:**
 
-1. **Immediately revoke token access.** Visit https://myaccount.google.com/permissions and look for the name of your app. then click "Remove Access"
+1. **Immediately revoke token access.** Visit
+   https://myaccount.google.com/permissions and look for the name of your app.
+   then click "Remove Access"
 
-2. **Generate a new Web Client Secret.** Go to https://console.cloud.google.com/apis/credentials and click click the pencil icon next to your Web Client. On the next screen, click "Add Secret" to add a new secret. Then trash the old one.
+2. **Generate a new Web Client Secret.** Go to
+   https://console.cloud.google.com/apis/credentials and click click the pencil
+   icon next to your Web Client. On the next screen, click "Add Secret" to add a
+   new secret. Then trash the old one.
 
 ## Configure `./config.ts`
 
-1. Set the allowed meeting durations by creating an array of integers representing the number of minutes for each duration. For example, to allow 15, 30, and 60-minute meetings:
+1. Set the allowed meeting durations by creating an array of integers
+   representing the number of minutes for each duration. For example, to allow
+   15, 30, and 60-minute meetings:
 
 ```ts
 export const ALLOWED_DURATIONS = [15, 30, 60]\
 ```
 
-2. Define the default meeting duration, which will be used if no other duration is specified. In this case, we set it to 30 minutes:
+2. Define the default meeting duration, which will be used if no other duration
+   is specified. In this case, we set it to 30 minutes:
 
 ```ts
 export const DEFAULT_DURATION = 30
 ```
 
-3. Specify the calendar(s) to check for availability by creating an array of calendar identifiers. In this case, we only check the "primary" calendar, which is Google’s default:
+3. Specify the calendar(s) to check for availability by creating an array of
+   calendar identifiers. In this case, we only check the "primary" calendar,
+   which is Google’s default:
 
 ```ts
 export const CALENDARS_TO_CHECK = ["primary"]
 ```
 
-4. Set the padding between available slots by specifying the number of minutes as SLOT_PADDING. In essence, this will show the specified number of minutes before and after each appointment in your calendar as "booked" so you’re not back-to-back. By default, it’s 0:
+4. Set the padding between available slots by specifying the number of minutes
+   as SLOT_PADDING. In essence, this will show the specified number of minutes
+   before and after each appointment in your calendar as "booked" so you’re not
+   back-to-back. By default, it’s 0:
 
 ```ts
 export const SLOT_PADDING = 0
 ```
 
-5. Set your IANA timezone string that you work out of (or more specifically, that your availability, below, will be defined in). By default, it’s mine :)
+5. Set your IANA timezone string that you work out of (or more specifically,
+   that your availability, below, will be defined in). By default, it’s mine :)
 
 ```ts
 export const OWNER_TIMEZONE = "America/Los_Angeles"
 ```
 
-6. Specify the times you’d like to take meetings each week by setting `OWNER_AVAILABILITY`. The object accepts a day of the week as a key (0 = Sunday, 6 = Saturday), and for each key, accepts an array of intervals, which contain start and end times as hours.
+6. Specify the times you’d like to take meetings each week by setting
+   `OWNER_AVAILABILITY`. The object accepts a day of the week as a key (0 =
+   Sunday, 6 = Saturday), and for each key, accepts an array of intervals, which
+   contain start and end times as hours.
 
-To illustrate the point a little better, the default values are set up to allow appointments from 9AM - 5PM, Monday-Friday, in the timezone if `OWNER_TIMEZONE`:
+To illustrate the point a little better, the default values are set up to allow
+appointments from 9AM - 5PM, Monday-Friday, in the timezone if `OWNER_TIMEZONE`:
 
 ```ts
 const DEFAULT_WORKDAY = [
@@ -189,7 +261,8 @@ export const OWNER_AVAILABILITY: AvailabilitySlotsMap = {
 }
 ```
 
-You can also tweak options for formatting local dates and times, but the defaults should be fine and flexible enough.
+You can also tweak options for formatting local dates and times, but the
+defaults should be fine and flexible enough.
 
 Now, let's dig into the code!
 

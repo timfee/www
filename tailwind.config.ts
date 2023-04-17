@@ -1,12 +1,11 @@
-import type { Config } from "tailwindcss"
-
-import typography from "@tailwindcss/typography"
-import plugin from "tailwindcss/plugin"
 import { fontFamily } from "tailwindcss/defaultTheme"
+import { type Config } from "tailwindcss"
+import plugin from "tailwindcss/plugin"
+import typography from "@tailwindcss/typography"
 
-export default {
+const tailwindConfig = {
   content: [
-    "./content/**/*.{md,mdx}",
+    "./content/**/*.mdx",
     "./components/**/*.{js,ts,jsx,tsx}",
     "./app/**/*.{js,ts,jsx,tsx}",
   ],
@@ -20,19 +19,6 @@ export default {
               "h1,h2,h3,h4,h5,h6": {
                 fontFamily: theme("fontFamily.sans").join(","),
               },
-              "code:not([class])": {
-                color: "var(--tw-prose-pre-bg)",
-                borderRadius: theme("borderRadius.lg"),
-                paddingTop: theme("padding.1"),
-                paddingRight: theme("padding[1.5]"),
-                paddingBottom: theme("padding.1"),
-                paddingLeft: theme("padding[1.5]"),
-                boxShadow: "inset 0 0 0 1px var(--tw-prose-code-ring)",
-                backgroundColor: "var(--tw-prose-pre-code)",
-                fontSize: theme("fontSize.2xs"),
-                whiteSpace: "no-wrap",
-              },
-
               "code::before": {
                 content: '""',
               },
@@ -72,9 +58,6 @@ export default {
         sans: ["var(--font-sans)", ...fontFamily.sans],
         serif: ["var(--font-serif)", ...fontFamily.serif],
       },
-      aria: {
-        current: 'current="page"',
-      },
     },
   },
   plugins: [
@@ -84,3 +67,5 @@ export default {
     }),
   ],
 } satisfies Config
+
+export default tailwindConfig

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  @apply scroll-smooth subpixel-antialiased bg-slate-100;
+
+  text-rendering: optimizeLegibility;
+}
+body {
+  font-feature-settings: "ss01", "ss02", "kern", "liga", "clig", "calt", "dlig";
+}
 :root {
   --shiki-color-text: theme("colors.white");
   --shiki-token-constant: theme("colors.emerald.300");
@@ -12,13 +20,4 @@
   --shiki-token-function: theme("colors.violet.300");
   --shiki-token-string-expression: theme("colors.emerald.300");
   --shiki-token-punctuation: theme("colors.zinc.200");
-}
-
-html {
-  @apply scroll-smooth;
-  @apply subpixel-antialiased;
-  text-rendering: optimizeLegibility;
-}
-body {
-  font-feature-settings: "ss01", "ss02", "kern", "liga", "clig", "calt", "dlig";
 }

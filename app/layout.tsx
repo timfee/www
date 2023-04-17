@@ -1,44 +1,19 @@
+import localFont from "next/font/local"
 import { clsx } from "clsx"
 import "./globals.css"
-import localFont from "next/font/local"
-import { Metadata } from "next"
 import PlausibleProvider from "next-plausible"
 import { Analytics } from "@vercel/analytics/react"
-import Navbar from "./navbar"
-import { GithubSvg, LinkedInSvg, TwitterSvg } from "@/components/logos"
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en" className={clsx("h-full", Sans.variable, Serif.variable)}>
-      <head>
-        <PlausibleProvider
-          domain="timfeeley.com"
-          trackFileDownloads
-          trackOutboundLinks
-        />
-      </head>
-      <body>
-        <a id="top" />
-        <Navbar />
-        {children}
-        <Analytics />
-        <footer className="mx-auto pb-36 text-center">
-          <p className="mb-6 mt-20 text-slate-500">
-            <span className="mr-2 font-serif">✌️</span> Thanks for visiting{" "}
-          </p>
-          <SocialIcons />
-        </footer>
-      </body>
-    </html>
-  )
-}
-export const metadata: Metadata = {
+
+import Navigation from "./navigation"
+
+export const metadata = {
+  title: {
+    default: "Tim Feeley — Product manager. Friend.",
+    template: "Tim Feeley — %s",
+  },
   description:
     "Hi, I’m Tim Feeley, a people-centric Product Manager from San Francisco.",
-  themeColor: "#E6E2C1",
+  themeColor: "#e2e8f0",
 
   openGraph: {
     description:
@@ -48,8 +23,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://timfeeley.com/opengraph.png",
-        width: 1920,
-        height: 1080,
+        width: 1200,
+        height: 630,
       },
     ],
     locale: "en-US",
@@ -69,46 +44,29 @@ export const metadata: Metadata = {
   icons: {
     shortcut: "/favicon.svg",
   },
+
   viewport: "width=device-width, initial-scale=1",
 }
-
-function SocialIcons() {
-  const ICONS = [
-    {
-      name: "LinkedIn",
-      href: "https://linkedin.com/in/timfeeley",
-
-      svg: LinkedInSvg,
-    },
-    {
-      name: "Twitter",
-      href: "https://twitter.com/timfee",
-
-      svg: TwitterSvg,
-    },
-    {
-      name: "GitHub",
-      href: "https://github.com/timfee",
-
-      svg: GithubSvg,
-    },
-  ]
-
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <section className="inline-flex space-x-6 text-slate-400">
-      {ICONS.map(({ name, href, svg: Svg }) => (
-        <a key={name} href={href} rel="noopener noreferrer" target="_blank">
-          <Svg width="18" height="18" />
-        </a>
-      ))}
-      <a
-        className="text-xs text-slate-800 underline"
-        rel="noopener noreferrer"
-        target="_blank"
-        href="https://github.com/timfee/www">
-        view source
-      </a>
-    </section>
+    <html lang="en" className={clsx("h-full", Sans.variable, Serif.variable)}>
+      <head>
+        <PlausibleProvider
+          domain="timfeeley.com"
+          trackFileDownloads
+          trackOutboundLinks
+        />
+      </head>
+      <body>
+        <Navigation />
+        <main className="prose mx-auto max-w-3xl px-3">{children}</main>
+        <Analytics />
+      </body>
+    </html>
   )
 }
 
