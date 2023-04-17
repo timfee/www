@@ -31,7 +31,7 @@ export default function Timeline() {
   ].reverse()
 
   return (
-    <aside className="not-prose relative mx-3.5">
+    <aside className="not-prose relative px-3.5">
       <div
         className="absolute inset-0 -z-10 flex items-center"
         aria-hidden="true">
@@ -39,13 +39,19 @@ export default function Timeline() {
       </div>
       <ol className="not-prose relative flex select-none list-none items-center justify-between">
         {gigs.map(({ title, employer, logo }) => (
-          <li key={title} className={clsx("group relative flex h-16 w-16")}>
-            <Image
-              src={logo}
-              fill
-              alt={employer}
-              className="rounded-full border bg-white object-contain"
-            />
+          <li
+            key={title}
+            className={clsx(
+              "group flex h-10 w-10 sm:relative sm:h-16 sm:w-16"
+            )}>
+            <div className="relative h-full w-full">
+              <Image
+                src={logo}
+                fill
+                alt={employer}
+                className="rounded-full border bg-white object-contain"
+              />
+            </div>
             <Popup>
               <p className="mb-1 text-xs font-semibold">{employer}</p>
               <p className="text-[0.7em]">{title}</p>
@@ -61,12 +67,12 @@ function Popup({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={clsx(
-        "absolute -inset-x-10 top-16 z-10 h-fit",
+        "absolute inset-x-0 top-14 z-10 h-fit sm:-inset-x-10 sm:top-[5rem]",
         "rounded p-2 text-center font-sans  leading-tight",
         "bg-slate-900 text-white",
-        "before:absolute before:-top-4 before:left-[calc(50%-8px)] before:z-20",
-        "before:border-8 before:border-transparent",
-        "before:border-b-slate-900",
+        "sm:before:absolute sm:before:-top-4 sm:before:left-[calc(50%-8px)] sm:before:z-20",
+        "sm:before:border-8 sm:before:border-transparent",
+        "sm:before:border-b-slate-900",
         "transform-gpu transition-all duration-200 ease-in-out",
         "invisible group-hover:visible",
         "opacity-0 group-hover:opacity-100",
