@@ -68,7 +68,7 @@ function Popup({ children }: { children: React.ReactNode }) {
     <div
       className={clsx(
         "absolute inset-x-0 top-14 z-10 h-fit sm:-inset-x-10 sm:top-[5rem]",
-        "rounded p-2 text-center font-sans  leading-tight",
+        "rounded p-2 text-center font-sans leading-tight",
         "bg-slate-900 text-white",
         "sm:before:absolute sm:before:-top-4 sm:before:left-[calc(50%-8px)] sm:before:z-20",
         "sm:before:border-8 sm:before:border-transparent",

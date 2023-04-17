@@ -6,6 +6,7 @@ import source from "./selfie.png"
 export default function Selfie({
   height: _height,
   width: _width,
+  className,
 }: HTMLProps<HTMLImageElement>) {
   const ASPECT_RATIO = 612 / 760
 
@@ -26,6 +27,7 @@ export default function Selfie({
       height={height}
       width={width}
       src={source}
+      className={className}
       alt="Tim Feeley"
     />
   )

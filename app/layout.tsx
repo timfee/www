@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/react"
 
 import { Metadata } from "next"
 import Navigation from "./navigation"
+import Footer from "./footer"
 
 export const metadata: Metadata = {
   title: {
@@ -86,6 +87,7 @@ export default function RootLayout({
       <body>
         <Navigation />
         <main className="prose mx-auto max-w-3xl px-3">{children}</main>
+        <Footer />
         <Analytics />
       </body>
     </html>
