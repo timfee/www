@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation"
-import Link from "next/link"
 import { allPages } from "@/.contentlayer/generated"
 import Mdx from "@/app/mdx-wrapper"
 

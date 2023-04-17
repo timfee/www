@@ -1,12 +1,14 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import localFont from "next/font/local"
 import { clsx } from "clsx"
 import "./globals.css"
 import PlausibleProvider from "next-plausible"
 import { Analytics } from "@vercel/analytics/react"
 
+import { Metadata } from "next"
 import Navigation from "./navigation"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: {
     default: "Tim Feeley — Product manager. Friend.",
     template: "Tim Feeley — %s",
@@ -29,6 +31,7 @@ export const metadata = {
     ],
     locale: "en-US",
   },
+
   robots: {
     index: true,
     follow: true,
@@ -52,6 +55,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const ldJson = {
+    "@context": "https://schema.org/",
+    "@type": "Person",
+    name: "Tim Feeley",
+    url: "https://timfeeley.com",
+    image: "https://timfeeley.com/timfeeley.png",
+    sameAs: [
+      "https://twitter.com/timfee",
+      "https://linkedin.com/in/timfeeley",
+      "https://github.com/timfee",
+      "https://timfee.dev",
+    ],
+  }
+
   return (
     <html lang="en" className={clsx("h-full", Sans.variable, Serif.variable)}>
       <head>
@@ -59,6 +76,11 @@ export default function RootLayout({
           domain="timfeeley.com"
           trackFileDownloads
           trackOutboundLinks
+        />
+        <script
+          key="ldJson"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
         />
       </head>
       <body>

@@ -1,9 +1,14 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { ArrowUpIcon } from "@heroicons/react/24/outline"
+import { Metadata } from "next"
 import { allPosts } from "@/.contentlayer/generated"
 import Mdx from "@/app/mdx-wrapper"
-export function generateMetadata({ params }: { params: { post: string } }) {
+export function generateMetadata({
+  params,
+}: {
+  params: { post: string }
+}): Metadata {
   const post = allPosts.find(
     (post) => post.url.slice("/posts/".length) === params.post
   )
@@ -12,6 +17,19 @@ export function generateMetadata({ params }: { params: { post: string } }) {
   }
   return {
     title: post.title,
+    description: post.excerpt,
+    authors: [
+      {
+        name: "Tim Feeley",
+        url: "https://timfeeley.com",
+      },
+    ],
+    openGraph: {
+      type: "article",
+      description: post.excerpt,
+      title: post.title,
+      publishedTime: post.date,
+    },
   }
 }
 
