@@ -11,7 +11,7 @@ export default function Navigation() {
       <nav className="mx-auto my-6 flex max-w-3xl items-center justify-between rounded-full bg-white px-6 py-4 shadow shadow-slate-500/20">
         <Link
           href="/"
-          className="relative flex w-14 origin-left transform-gpu text-red-600 transition hover:scale-150">
+          className="relative flex w-14 origin-left transform-gpu text-red-600 transition hover:scale-150 hover:text-red-400">
           <Logo className="w-14" />
         </Link>
         <ul className="flex items-center space-x-6">

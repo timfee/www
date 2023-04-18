@@ -21,3 +21,7 @@ body {
   --shiki-token-string-expression: theme("colors.emerald.300");
   --shiki-token-punctuation: theme("colors.zinc.200");
 }
+
+.cf-turnstile {
+  @apply my-12 mx-auto w-[300px];
+}

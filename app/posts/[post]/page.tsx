@@ -4,6 +4,13 @@ import { ArrowUpIcon } from "@heroicons/react/24/outline"
 import { Metadata } from "next"
 import { allPosts } from "@/.contentlayer/generated"
 import Mdx from "@/app/mdx-wrapper"
+
+export async function generateStaticParams() {
+  return allPosts.map((post) => ({
+    post: post.url.slice("/posts/".length),
+  }))
+}
+
 export function generateMetadata({
   params,
 }: {

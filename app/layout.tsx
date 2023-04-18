@@ -86,7 +86,7 @@ export default function RootLayout({
       </head>
       <body>
         <Navigation />
-        <main className="prose mx-auto max-w-3xl px-3">{children}</main>
+        {children}
         <Footer />
         <Analytics />
       </body>
