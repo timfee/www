@@ -2,6 +2,12 @@
   "name": "www",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://timfeeley.com",
+  "license": "MIT",
+  "author": {
+    "name": "Tim Feeley",
+    "email": "tim@timfeeley.com"
+  },
   "scripts": {
     "build": "next build",
     "dev": "contentlayer dev & next dev",
@@ -26,6 +32,7 @@
     "postcss": "8.4.23",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "server-only": "^0.0.1",
     "sharp": "^0.32.0",
     "shiki": "^0.14.1",
     "tailwindcss": "3.3.1",

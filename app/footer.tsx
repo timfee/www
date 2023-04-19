@@ -25,7 +25,14 @@ export default function Footer() {
   return (
     <footer className="mx-auto max-w-3xl px-3 py-24">
       <p className="text-center text-sm text-slate-500">
-        copyright &copy; {new Date().getFullYear()} Tim Feeley
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/timfee/www/blob/main/LICENSE.md"
+          className="underline decoration-slate-300">
+          copyright &copy;
+        </a>{" "}
+        {new Date().getFullYear()} Tim Feeley
       </p>
       <section className="flex items-center justify-center space-x-6 pt-6 text-slate-400">
         {ICONS.map(({ name, href, svg: Svg }) => (

@@ -23,13 +23,6 @@ export const metadata: Metadata = {
       "Hi, I’m Tim Feeley, a people-centric Product Manager from San Francisco.",
     url: "https://timfeeley.com",
     siteName: "Tim Feeley",
-    images: [
-      {
-        url: "https://timfeeley.com/opengraph.png",
-        width: 1200,
-        height: 630,
-      },
-    ],
     locale: "en-US",
   },
 
@@ -45,10 +38,6 @@ export const metadata: Metadata = {
     title: "Tim Feeley",
     card: "summary_large_image",
   },
-  icons: {
-    shortcut: "/favicon.svg",
-  },
-
   viewport: "width=device-width, initial-scale=1",
 }
 export default function RootLayout({
