@@ -1,12 +1,12 @@
-import { index } from ".contentlayer/generated"
+import { bio } from ".contentlayer/generated"
 import Mdx from "@/app/mdx-wrapper"
 
 export const metadata = {
-  title: index.title,
+  title: bio.title,
 }
 
 export default function Page() {
-  const { code } = index.body
+  const { code } = bio.body
 
   return <Mdx>{code}</Mdx>
 }

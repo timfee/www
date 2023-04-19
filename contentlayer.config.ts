@@ -34,49 +34,26 @@ const Post = defineDocumentType(() => ({
   },
 }))
 
-const Page = defineDocumentType(() => ({
-  name: "Page",
-  filePathPattern: `pages/**/*.mdx`,
-  contentType: "mdx",
-  fields: {
-    title: {
-      type: "string",
-      description: "The title of the page",
-      required: true,
+const SingletonPage = (name: string, filePathPattern: string) =>
+  defineDocumentType(() => ({
+    name,
+    filePathPattern,
+    contentType: "mdx",
+    isSingleton: true,
+    fields: {
+      title: {
+        type: "string",
+        description: "The title of the page",
+        required: true,
+      },
     },
-  },
-  computedFields: {
-    url: {
-      type: "string",
-      resolve: (document_) =>
-        `/${document_._raw.flattenedPath.slice("/pages".length)}`,
+    computedFields: {
+      url: {
+        type: "string",
+        resolve: (document_) => `/${document_._raw.flattenedPath}`,
+      },
     },
-  },
-}))
-
-const Index = defineDocumentType(() => ({
-  name: "Index",
-  filePathPattern: `index.mdx`,
-  contentType: "mdx",
-  isSingleton: true,
-  fields: {
-    title: {
-      type: "string",
-      description: "The title of the page",
-      required: true,
-    },
-    order: {
-      type: "number",
-      description: "The order in the navbar",
-      required: true,
-    },
-    navTitle: {
-      type: "string",
-      description: "The title in the navbar",
-      required: true,
-    },
-  },
-}))
+  }))
 
 function rehypeParseCodeBlocks() {
   return (tree: Element) => {
@@ -138,7 +115,11 @@ export const rehypePlugins = [rehypeParseCodeBlocks, rehypeShiki]
 
 export default makeSource({
   contentDirPath: "content",
-  documentTypes: [Post, Page, Index],
+  documentTypes: [
+    Post,
+    SingletonPage("Bio", "bio.mdx"),
+    SingletonPage("Index", "index.mdx"),
+  ],
   mdx: {
     rehypePlugins,
   },
