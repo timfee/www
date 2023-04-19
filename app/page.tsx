@@ -1,5 +1,5 @@
 import { index } from ".contentlayer/generated"
-import Mdx from "@/app/mdx-wrapper"
+import { MotionMdx } from "@/app/mdx-wrapper"
 
 export const metadata = {
   title: index.title,
@@ -8,5 +8,5 @@ export const metadata = {
 export default function Page() {
   const { code } = index.body
 
-  return <Mdx>{code}</Mdx>
+  return <MotionMdx>{code}</MotionMdx>
 }
