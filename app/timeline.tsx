@@ -25,7 +25,7 @@ export default function Timeline() {
     },
     {
       employer: "Tripadvisor",
-      title: "Product Manager, Facebook Design System",
+      title: "Director, Site Experience",
       logo: "/images/logos/tripadvisor.png",
     },
   ].reverse()
