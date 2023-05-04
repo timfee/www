@@ -3,6 +3,9 @@
   "extends": [
     "config:base"
   ],
+  "schedule": [
+    "before 8am on Friday"
+  ],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
