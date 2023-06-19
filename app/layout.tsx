@@ -2,10 +2,10 @@
 import localFont from "next/font/local"
 import { clsx } from "clsx"
 import "./globals.css"
-import PlausibleProvider from "next-plausible"
-import { Analytics } from "@vercel/analytics/react"
 
+import { Analytics } from "@vercel/analytics/react"
 import { Metadata } from "next"
+import Providers from "./providers"
 import Navigation from "./navigation"
 import Footer from "./footer"
 
@@ -61,24 +61,21 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={clsx("h-full", Sans.variable, Serif.variable)}>
-      <head>
-        <PlausibleProvider
-          domain="timfeeley.com"
-          trackFileDownloads
-          trackOutboundLinks
-        />
-        <script
-          key="ldJson"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
-        />
-      </head>
-      <body>
-        <Navigation />
-        <main className="prose mx-auto max-w-3xl px-3">{children}</main>
-        <Footer />
-        <Analytics />
-      </body>
+      <Providers>
+        <head>
+          <script
+            key="ldJson"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(ldJson) }}
+          />
+        </head>
+        <body>
+          <Navigation />
+          <main className="prose mx-auto max-w-3xl px-3">{children}</main>
+          <Footer />
+          <Analytics />
+        </body>
+      </Providers>
     </html>
   )
 }

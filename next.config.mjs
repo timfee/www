@@ -6,6 +6,14 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/in/:path*",
+        destination: "https://app.posthog.com/:path*",
+      },
+    ]
+  },
   async redirects() {
     return [
       {
