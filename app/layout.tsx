@@ -93,16 +93,6 @@ const Sans = localFont({
       style: "italic",
     },
     {
-      path: "../public/fonts/sans-medium.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/sans-medium-italic.woff2",
-      weight: "500",
-      style: "italic",
-    },
-    {
       path: "../public/fonts/sans-semibold.woff2",
       weight: "600",
       style: "normal",
@@ -122,18 +112,9 @@ const Sans = localFont({
       weight: "700",
       style: "italic",
     },
-    {
-      path: "../public/fonts/sans-black.woff2",
-      weight: "800",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/sans-black-italic.woff2",
-      weight: "800",
-      style: "italic",
-    },
   ],
 })
+
 const Serif = localFont({
   display: "swap",
   preload: true,
