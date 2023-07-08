@@ -1,10 +1,19 @@
-import { withContentlayer } from "next-contentlayer"
+import nextMDX from "@next/mdx"
+import { rehypePlugins } from "./mdx/rehype.mjs"
+
+const withMDX = nextMDX({
+  options: {
+    rehypePlugins,
+  },
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  pageExtensions: ["ts", "tsx", "mdx"],
   experimental: {
-    swcMinify: true,
+    scrollRestoration: true,
   },
 }
 
-export default withContentlayer(nextConfig)
+export default withMDX(nextConfig)

@@ -37,8 +37,9 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".contentlayer/generated",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "tailwind.config.cjs",
+    "mdx/rehype.mjs"
   ],
   "exclude": [
     "node_modules"

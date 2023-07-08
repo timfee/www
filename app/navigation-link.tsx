@@ -22,7 +22,7 @@ export function NavLink({
           {
             "font-bold text-black decoration-red-500": href === currentUrl,
             "text-slate-800 decoration-slate-500/40": href !== currentUrl,
-          }
+          },
         )}>
         {children}
       </Link>

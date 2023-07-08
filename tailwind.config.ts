@@ -4,11 +4,7 @@ import plugin from "tailwindcss/plugin"
 import typography from "@tailwindcss/typography"
 
 const tailwindConfig = {
-  content: [
-    "./content/**/*.mdx",
-    "./components/**/*.{js,ts,jsx,tsx}",
-    "./app/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./app/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       typography: function (theme: (argument0: string) => string[]) {

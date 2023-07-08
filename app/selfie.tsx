@@ -7,6 +7,7 @@ export default function Selfie({
   height: _height,
   width: _width,
   className,
+  style = {},
 }: HTMLProps<HTMLImageElement>) {
   const ASPECT_RATIO = 612 / 760
 
@@ -29,6 +30,7 @@ export default function Selfie({
       src={source}
       className={className}
       alt="Tim Feeley"
+      style={style}
     />
   )
 }

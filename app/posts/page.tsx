@@ -1,16 +1,27 @@
 import Link from "next/link"
-import { allPosts } from "@/.contentlayer/generated"
 
 export const metadata = {
   title: "Writing",
 }
-export default function Post() {
+
+const mdxContext = require.context("/app/posts", true, /\.mdx$/)
+const posts = mdxContext
+  .keys()
+  .filter((fileName) => !fileName.startsWith("app")) // filter duplicates
+  .map((fileName) => ({
+    id: fileName,
+    url: fileName.replace("./(posts)/", "/posts/").replace("/page.mdx", ""),
+    ...mdxContext(fileName).metadata,
+  }))
+
+export default async function Post() {
   return (
     <>
       <h1>Writing</h1>
+
       <p>I don’t do it often, but when I do, you can find it here:</p>
       <section className="divide-y divide-slate-300">
-        {allPosts.map((post) => (
+        {posts.map((post) => (
           <article
             key={post._id}
             className="flex flex-col items-start justify-between py-6">

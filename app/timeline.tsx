@@ -42,7 +42,7 @@ export default function Timeline() {
           <li
             key={title}
             className={clsx(
-              "group flex h-10 w-10 sm:relative sm:h-16 sm:w-16"
+              "group flex h-10 w-10 sm:relative sm:h-16 sm:w-16",
             )}>
             <div className="relative h-full w-full">
               <Image
@@ -76,7 +76,7 @@ function Popup({ children }: { children: React.ReactNode }) {
         "transform-gpu transition-all duration-200 ease-in-out",
         "invisible group-hover:visible",
         "opacity-0 group-hover:opacity-100",
-        "translate-y-2 group-hover:translate-y-0"
+        "translate-y-2 group-hover:translate-y-0",
       )}>
       {children}
     </div>

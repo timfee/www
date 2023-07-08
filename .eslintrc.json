@@ -1,25 +1,31 @@
 {
-  "plugins": ["sonarjs", "json-format"],
+  "plugins": [
+    "json-format"
+  ],
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:mdx/recommended",
-    "plugin:sonarjs/recommended",
-    "plugin:react-hooks/recommended",
-    "plugin:@typescript-eslint/recommended",
     "plugin:tailwindcss/recommended",
-    "plugin:unicorn/recommended",
     "plugin:prettier/recommended",
-    "plugin:import/recommended",
-    "plugin:import/typescript"
+    "plugin:import/recommended"
   ],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js"],
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/typescript"
+      ],
       "parser": "@typescript-eslint/parser"
     },
     {
-      "files": ["*.html"],
+      "files": [
+        "*.html"
+      ],
       "parser": "@angular-eslint/template-parser"
     }
   ],
@@ -35,15 +41,6 @@
   "rules": {
     "import/order": "error",
     "tailwindcss/classnames-order": "error",
-    "unicorn/prevent-abbreviations": [
-      "error",
-      {
-        "checkFilenames": false,
-        "ignore": [".*Props.*", ".*props.*", ".*ref", ".*Ref"],
-        "allowList": {
-          "generateStaticParams": true
-        }
-      }
-    ]
+    "unicorn/prevent-abbreviations": "off"
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import localFont from "next/font/local"
 import { clsx } from "clsx"
 import "./globals.css"
@@ -55,7 +54,7 @@ export default function RootLayout({
       "https://twitter.com/timfee",
       "https://linkedin.com/in/timfeeley",
       "https://github.com/timfee",
-      "https://timfee.dev",
+      "https://threads.net/timfee",
     ],
   }
 
