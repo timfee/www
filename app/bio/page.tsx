@@ -1,4 +1,4 @@
-import Timeline from "../timeline"
+import Timeline from "./timeline"
 
 export const metadata = {
   title: "About me",
@@ -40,6 +40,11 @@ export default function Page() {
         After a quick stint in Fintech at Goldman Sachs, I returned to Google to
         build out data protection infrastructure to keep customers’ personal
         data safe and secure as it moves across Google’s systems.
+      </p>
+      <p>
+        I was impacted by Google’s 2023 reduction in force, but found my next
+        role at Personio, building The People Operating System; all-in-one HR
+        software for small and medium-sized companies.
       </p>
       <p>When I’m not working, you can find me:</p>
       <ul>
