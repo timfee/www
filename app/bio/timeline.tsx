@@ -6,7 +6,7 @@ export default function Timeline() {
   const gigs = [
     {
       employer: "Personio",
-      title: "Product Manager\n(2023-present)",
+      title: "Sr. Group Product Manager\n(2023-present)",
       Logo: Personio,
     },
     {
