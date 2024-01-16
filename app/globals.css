@@ -9,6 +9,7 @@ html {
 body {
   font-feature-settings: "ss01", "ss02", "kern", "liga", "clig", "calt", "dlig";
 }
+
 [style*="--animate-in"] {
   opacity: 0;
   animation-name: fade-in;
